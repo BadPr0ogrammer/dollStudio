@@ -1,0 +1,32 @@
+// SPDX-FileCopyrightText: Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
+// SPDX-License-Identifier: BSD-3-Clause
+#include "vtkF3DBitonicSortGlobalFlipCS.h"
+
+const char *vtkF3DBitonicSortGlobalFlipCS =
+"#version 430\n"
+"\n"
+"//VTK::BitonicDefines::Dec\n"
+"\n"
+"layout(local_size_x = WorkgroupSize) in;\n"
+"layout(std430) buffer;\n"
+"\n"
+"layout(binding = 0) buffer Keys\n"
+"{\n"
+"  KeyType key[];\n"
+"};\n"
+"\n"
+"layout(binding = 1) buffer Values\n"
+"{\n"
+"  ValueType value[];\n"
+"};\n"
+"\n"
+"layout(location = 0) uniform int count;\n"
+"layout(location = 1) uniform int height;\n"
+"\n"
+"//VTK::BitonicFunctions::Dec\n"
+"\n"
+"void main()\n"
+"{\n"
+"  compare_and_swap(flip(height));\n"
+"}\n"
+"";
