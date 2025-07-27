@@ -3,13 +3,15 @@
 #include "app.h"
 #include "factory.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    QQuickVTKItem::setGraphicsApi();
-    f3d::factory::instance()->autoload();
+	QQuickVTKItem::setGraphicsApi();
+	f3d::factory::instance()->autoload();
 
-    DS::App app(argc, argv);
-    if (app._qmlEng->rootObjects().isEmpty())
-        return 1;
-    return app._application.get()->exec();
+	DS::App app(argc, argv);
+	if (app._engine->rootObjects().isEmpty())
+		return 1;
+
+	app.setup();
+	return app._application->exec();
 }

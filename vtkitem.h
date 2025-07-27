@@ -5,6 +5,7 @@
 #include <QString>
 #include <QTimer>
 #include <QStandardItem>
+#include <QTreeView>
 
 #include <vtkNew.h>
 #include <vtkObject.h>
@@ -26,38 +27,39 @@
 #include "options.h"
 
 class aiNode;
-namespace DS {
-class App;
+namespace DS
+{
+class Manager;
 struct VtkItem : QQuickVTKItem
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    struct Data : vtkObject
-    {
-        static Data* New();
-        vtkTypeMacro(Data, vtkObject);
-        struct VtkItem*                     _vtkItem = nullptr;
+	struct Data : vtkObject
+	{
+		static Data* New();
+		vtkTypeMacro(Data, vtkObject);
+		struct VtkItem* _vtkItem = nullptr;
 
-        f3d::detail::window_impl*           _win = nullptr;
-        f3d::detail::scene_impl*            _scene = nullptr;
+		f3d::detail::window_impl* _win = nullptr;
+		f3d::detail::scene_impl* _scene = nullptr;
 
-        vtkSmartPointer<vtkCallbackCommand> _timer1;
-    };    
-    QString _fname;
-    f3d::options _options;    
-    QTimer _timer2;
-    App* _app = nullptr;
+		vtkSmartPointer<vtkCallbackCommand> _timer1;
+	};
+	QString _fname;
+	f3d::options _options;
+	QTimer _timer2;
+	Manager* _manager = nullptr;
 
-    vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
-    void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
+	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
+	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
 
-    bool openSource();
-    void close();
-    void play();
-    void setupOpt();
-    void setTreeView(Data* vtk);
-    void traversTree(QStandardItem *parent, const aiNode *node);
+	bool openSource(bool clear);
+	void close();
+	void play();
+	void setupOpt();
+	void setTreeView(Data* vtk, bool clear);
+	void traversTree(QStandardItem* parent, const aiNode* node);
 public slots:
-    void timerSlot();
+	void timerSlot();
 };
 }

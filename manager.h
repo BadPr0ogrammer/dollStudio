@@ -1,29 +1,40 @@
-#ifndef MANAGER_H
-#define MANAGER_H
+#pragma once
 
 #include <memory>
 
 #include <QObject>
 #include <QUrl>
-#include <QtQmlIntegration/qqmlintegration.h>
+#include <QQuickItem>
+#include <QModelIndex>
+#include <QStandardItemModel>
+#include <QStringListModel>
 
-#include "vtkitem.h"
-
-namespace DS {
-class TreeModel;
+class aiScene;
+namespace DS
+{
+class App;
+class VtkItem;
 class Manager : public QObject
 {
-    Q_OBJECT
-
-    QML_ELEMENT
-    QML_UNCREATABLE("")
-    Q_MOC_INCLUDE("app.h")
+	Q_OBJECT
+		QML_ELEMENT
+		QML_UNCREATABLE("")
+		Q_MOC_INCLUDE("app.h")
 
 public:
-    Q_INVOKABLE void openSource(const QUrl &url);
-    Q_INVOKABLE void playFlag();
+	Manager(App* app);
+	
+	App*				_app = nullptr;
+	QStandardItemModel*	_treemodel = nullptr;
+	QStringListModel*	_listmodel = nullptr;
+	VtkItem*			_vtk = nullptr;
+	const aiScene*		_aiscene = nullptr;
 
-    VtkItem *_vtk = nullptr;
+	void setConnect();
+
+	Q_INVOKABLE void openSource(const QUrl& url, bool clear = true);
+	Q_INVOKABLE void playFlag();
+	Q_INVOKABLE void treeSelChanged(const QModelIndex& idx);
 };
+
 }
-#endif

@@ -16,6 +16,7 @@ ApplicationWindow
 
     required property Manager projectManager
     required property TreeModel treeModel
+    required property ListModel listModel
     property alias openProjectDialog: openProjectDialog
 
     property var aboutDialog
@@ -47,13 +48,14 @@ ApplicationWindow
                     Label { id: label1; color: "#606060"; text: qsTr("Model tree"); Layout.fillHeight: false; }
                     TreeView {
                         id: treeView
-                        model: treeModel
+                        objectName: "treeView"
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        delegate: TreeViewDelegate {
-                            text: model.display
-                        }
-                    }
+                        model: treeModel
+                        delegate: TreeViewDelegate { text: model.display }
+                        selectionModel: ItemSelectionModel { id: selectionModel }
+                        onCurrentRowChanged: { projectManager.treeSelChanged(selectionModel.currentIndex) }
+                    }                    
                 }
             }
             Page {
@@ -64,7 +66,18 @@ ApplicationWindow
                 SplitView.minimumHeight:  150
                 SplitView.preferredHeight: 200
                 SplitView.maximumHeight: window.height / 2
-                Label { color: "#606060"; text: qsTr("Property") }
+                ColumnLayout {
+                    anchors.fill: parent
+                    Label { color: "#606060"; text: qsTr("Property") }
+                    ListView {
+                        id: propertyList
+                        objectName: "propertyList"
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        model: listModel 
+                        delegate: Text { text: display }
+                    }
+                }
             }
         }
     }
