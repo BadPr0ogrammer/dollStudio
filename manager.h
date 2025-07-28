@@ -10,6 +10,8 @@
 #include <QStringListModel>
 
 class aiScene;
+class aiNode;
+class vtkF3DAssimpImporter;
 namespace DS
 {
 class App;
@@ -28,9 +30,12 @@ public:
 	QStandardItemModel*	_treemodel = nullptr;
 	QStringListModel*	_listmodel = nullptr;
 	VtkItem*			_vtk = nullptr;
+	
 	const aiScene*		_aiscene = nullptr;
 
 	void setConnect();
+	void setTreeModel(vtkF3DAssimpImporter* importer, bool clear);
+	void traversTree(QStandardItem* parent, const aiNode* node);
 
 	Q_INVOKABLE void openSource(const QUrl& url, bool clear = true);
 	Q_INVOKABLE void playFlag();

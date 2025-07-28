@@ -86,35 +86,11 @@ bool VtkItem::openSource(bool clear)
 	return false;
 }
 
-void VtkItem::traversTree(QStandardItem* parent, const aiNode* node)
-{
-	if (node != nullptr) {
-		QStandardItem* item = new QStandardItem();
-		item->setData(QString(node->mName.C_Str()), Qt::DisplayRole);
-		item->setData(QVariant::fromValue<const aiNode*>(node));
-		parent->appendRow(item);
-		for (int i = 0; i < node->mNumChildren; i++)
-			traversTree(item, node->mChildren[i]);
-	}
-}
-
 void VtkItem::setTreeView(Data* vtk, bool clear)
 {
 	vtkF3DAssimpImporter* importer = reinterpret_cast<vtkF3DAssimpImporter*>(
 		vtk->_scene->Internals->MetaImporter->Pimpl->Importers[0].Importer.Get());
-
-	if (clear)
-		_manager->_treemodel->removeRows(0, _manager->_treemodel->rowCount());
-
-	const aiScene* scene = importer->Internals->Scene;
-	_manager->_aiscene = scene;
-
-	const aiNode* root = scene->mRootNode;
-	QStandardItem* item = _manager->_treemodel->invisibleRootItem();
-	item->setData(QString(root->mName.C_Str()), Qt::DisplayRole);
-	item->setData(QVariant::fromValue<const aiNode*>(root));
-	for (int i = 0; i < root->mNumChildren; i++)
-		traversTree(item, root->mChildren[i]);
+	_manager->setTreeModel(importer, clear);
 }
 
 void VtkItem::close()

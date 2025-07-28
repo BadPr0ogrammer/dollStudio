@@ -45,7 +45,7 @@ ApplicationWindow
                 SplitView.fillHeight: true
                 ColumnLayout {
                     anchors.fill: parent
-                    Label { id: label1; color: "#606060"; text: qsTr("Model tree"); Layout.fillHeight: false; }
+                    Label { id: label1; color: "#606060"; text: qsTr("Skeleton"); Layout.fillHeight: false; }
                     TreeView {
                         id: treeView
                         objectName: "treeView"
@@ -68,14 +68,17 @@ ApplicationWindow
                 SplitView.maximumHeight: window.height / 2
                 ColumnLayout {
                     anchors.fill: parent
-                    Label { color: "#606060"; text: qsTr("Property") }
+                    Label { color: "#606060"; text: qsTr("Offset matrix") }
                     ListView {
                         id: propertyList
                         objectName: "propertyList"
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         model: listModel 
-                        delegate: Text { text: display }
+                        delegate: Text { 
+                            text: display 
+                            font.family: "Courier New"
+                        }
                     }
                 }
             }
