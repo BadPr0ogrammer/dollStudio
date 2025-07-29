@@ -187,7 +187,8 @@ public:
         if (!this->MetaImporter->Update())
         {
             this->MetaImporter->RemoveObservers(vtkCommand::ProgressEvent);
-            progressWidget->Off();
+            // b progressWidget->Off();
+            progressWidget->On();
 
             this->MetaImporter->Clear();
             this->Window.Initialize();

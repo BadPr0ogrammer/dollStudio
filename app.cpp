@@ -34,7 +34,8 @@ App::App(int& argc, char** argv)
 	_engine->setInitialProperties({
 		{ "projectManager", QVariant::fromValue(_manager) },
 		{ "treeModel", QVariant::fromValue(_manager->_treemodel) },
-		{ "listModel", QVariant::fromValue(_manager->_listmodel) }
+		{ "listModel", QVariant::fromValue(_manager->_listmodel) },
+		{ "sliderVal", QVariant::fromValue(_manager->sliderval) }
 		});
 	_engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
 	if (_engine->rootObjects().isEmpty()) {
@@ -45,10 +46,14 @@ App::App(int& argc, char** argv)
 		QObject* root = _engine->rootObjects().at(0);
 		VtkItem* vtk = nullptr;
 		if (root) {
-			vtk = reinterpret_cast<VtkItem*>(root->findChild<QObject*>("vtkItem"));
-			if (vtk) {
-				_manager->_vtk = vtk;
-				vtk->_manager = _manager;
+			QQuickItem* slider = reinterpret_cast<QQuickItem*>(root->findChild<QObject*>("slider1"));
+			if (slider) {
+				_manager->_slider = slider;
+				vtk = reinterpret_cast<VtkItem*>(root->findChild<QObject*>("vtkItem"));
+				if (vtk) {
+					_manager->_vtk = vtk;
+					vtk->_manager = _manager;
+				}
 			}
 		}
 		if (_manager->_vtk == nullptr) {

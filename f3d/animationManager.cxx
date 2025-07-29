@@ -56,6 +56,7 @@ void animationManager::Initialize()
   this->CurrentTimeSet = false;
 
   this->AvailAnimations = this->Importer->GetNumberOfAnimations();
+  /* b
   if (this->AvailAnimations > 0 && this->Interactor)
   {
     this->ProgressWidget = vtkSmartPointer<vtkProgressBarWidget>::New();
@@ -81,7 +82,7 @@ void animationManager::Initialize()
   {
     this->ProgressWidget = nullptr;
   }
-
+  */
   // Reset animation indices before updating
   this->PreparedAnimationIndices.reset();
   this->PrepareForAnimationIndices();
@@ -231,7 +232,7 @@ bool animationManager::LoadAtTime(double timeValue)
 #else
   this->Importer->UpdateTimeStep(this->CurrentTime);
 #endif
-
+  /* b
   if (this->Interactor && this->ProgressWidget)
   {
     // Set progress bar
@@ -241,7 +242,7 @@ bool animationManager::LoadAtTime(double timeValue)
       (this->CurrentTime - this->TimeRange[0]) / (this->TimeRange[1] - this->TimeRange[0]));
 
     //b this->Interactor->UpdateRendererAfterInteraction();
-  }
+  }*/
   return true;
 }
 

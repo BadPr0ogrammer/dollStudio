@@ -132,7 +132,7 @@ private:
   double DeltaTime = 0;
   bool CurrentTimeSet = false;
 
-  vtkSmartPointer<vtkProgressBarWidget> ProgressWidget;
+  // b vtkSmartPointer<vtkProgressBarWidget> ProgressWidget;
 };
 }
 }

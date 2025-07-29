@@ -7,12 +7,12 @@ import Qt.labs.platform as Platform
 import Dollstudio 1.0
 import  "./DSqml" as DSqml
 
-ApplicationWindow
-{
+ApplicationWindow {
+    id: window
     width: 800
     height: 600
     visible: true
-    title: "Dolls-studio"
+    title: qsTr("Hello World")
 
     required property Manager projectManager
     required property TreeModel treeModel
@@ -22,27 +22,51 @@ ApplicationWindow
     property var aboutDialog
 
     SplitView {
-        id: splitView1
-        objectName: "SplitView1"
+        id: split1
         anchors.fill: parent
-        orientation: Qt.Horizontal
-        VtkItem {
+        leftPadding: 4
+
+        ColumnLayout {
+            id: column1
             SplitView.fillWidth: true
-            objectName: "vtkItem"
+            
+            Frame {
+                id: frame1
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                rightPadding: 4
+                leftPadding: 0
+                bottomPadding: 4
+
+                VtkItem {                
+                    objectName: "vtkItem"
+                    anchors.fill: parent
+                }
+            }
+            Slider {
+                id: slider1
+                objectName: "slider1"
+                Layout.fillWidth: true
+                rightPadding: 4
+                bottomPadding: 4
+                height: 30
+                from: 0.0
+                to: 100.0
+                value: projectManager.sliderVal
+                onMoved: projectManager.sliderValue = value
+            }
         }
+
         SplitView {
             id: splitView2
-            objectName: "SplitView2"
             orientation: Qt.Vertical
-            SplitView.minimumWidth: 200
-            SplitView.preferredWidth: 240
-            SplitView.maximumWidth: window.width / 3
-            Page {
-                id: page1
-                objectName: "Page1"
-                padding: 16
-                topPadding: 0
+            SplitView.preferredWidth: 200
+            SplitView.minimumWidth: 100
+
+            Frame {
+                id: frame2
                 SplitView.fillHeight: true
+
                 ColumnLayout {
                     anchors.fill: parent
                     Label { id: label1; color: "#606060"; text: qsTr("Skeleton"); Layout.fillHeight: false; }
@@ -58,14 +82,11 @@ ApplicationWindow
                     }                    
                 }
             }
-            Page {
-                id: page2
-                objectName: "Page2"
-                padding: 16
-                topPadding: 0
-                SplitView.minimumHeight:  150
+            Frame {
+                id: frame3
                 SplitView.preferredHeight: 200
-                SplitView.maximumHeight: window.height / 2
+                SplitView.minimumHeight: 100
+
                 ColumnLayout {
                     anchors.fill: parent
                     Label { color: "#606060"; text: qsTr("Offset matrix") }
@@ -84,6 +105,7 @@ ApplicationWindow
             }
         }
     }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
@@ -101,7 +123,7 @@ ApplicationWindow
             title: qsTr("&Animation")
             Action {
                 text: qsTr("&Toggle")
-                onTriggered: projectManager.playFlag();
+                onTriggered: projectManager.playToggle();
             }
         }
         Menu {
@@ -110,14 +132,16 @@ ApplicationWindow
                 text: qsTr("&About")
                 onTriggered: aboutDialog.open()
             }
-        }                
+        }
     }
+
     Platform.FileDialog {
         id: openProjectDialog
         objectName: "openProjectDialog"        
         nameFilters: ["FBX files (*.fbx)","All files (*)"]
         onAccepted: projectManager.openSource(file);
     } 
+
     DSqml.AboutDialog {
         id: aboutDialog
         parent: Overlay.overlay

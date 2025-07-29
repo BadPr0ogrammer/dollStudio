@@ -2,6 +2,8 @@
 #include "manager.h"
 #include "vtkitem.h"
 
+#include <QThread>
+
 #include <vtkDataAssembly.h>
 #include <vtkProgressBarRepresentation.h>
 
@@ -12,12 +14,9 @@ vtkStandardNewMacro(VtkItem::Data)
 void VtkItem::setupOpt()
 {
 	_options.render.grid.enable = false;
-
-	connect(&_timer2, &QTimer::timeout, this, &VtkItem::timerSlot);
-	_timer2.start();
 }
 
-void VtkItem::timerSlot()
+void VtkItem::timerCall()
 {
 	dispatch_async([](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		if (renderWindow && renderWindow->GetInteractor())
@@ -35,29 +34,32 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 	vtk->_scene = new f3d::detail::scene_impl(_options, *vtk->_win);
 	vtk->_scene->SetInteractor(renderWindow->GetInteractor());
 
-	vtk->_timer1 = vtkSmartPointer<vtkCallbackCommand>::New();
+	vtk->_timercb = vtkSmartPointer<vtkCallbackCommand>::New();
 	vtk->_win->Internals->Interactor->CreateRepeatingTimer(10);
-	vtk->_timer1->SetCallback([](vtkObject*, unsigned long, void* clientData, void*) {
+	vtk->_timercb->SetCallback([](vtkObject*, unsigned long, void* clientData, void*) {
 		Data* vtk = static_cast<Data*>(clientData);
 		if (vtk->_scene->Internals->AnimationManager.IsPlaying()) {
 			vtk->_scene->Internals->AnimationManager.Tick();
 		}
 		});
-	vtk->_win->Internals->Interactor->AddObserver(vtkCommand::TimerEvent, vtk->_timer1);
-	vtk->_timer1->SetClientData(vtk);
+	vtk->_win->Internals->Interactor->AddObserver(vtkCommand::TimerEvent, vtk->_timercb);
+	vtk->_timercb->SetClientData(vtk);
 
 	vtk->_scene->Internals->AnimationManager.SetDeltaTime(1.0 / 30.0);
 	vtk->_win->UpdateDynamicOptions();
-
+	
+	_animanager = &vtk->_scene->Internals->AnimationManager;
 	return vtk;
 }
 
 void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
 {
+	_play = false;
+	_animanager = nullptr;
 	auto* vtk = Data::SafeDownCast(userData);
 
 	vtk->_scene->clear();
-	vtk->_timer1->Delete();
+	vtk->_timercb->Delete();
 
 	delete vtk->_win;
 	vtk->_win = nullptr;
@@ -67,7 +69,7 @@ void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
 
 bool VtkItem::openSource(bool clear)
 {
-	_timer2.stop();
+	_play = false;
 	dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		bool ret = false;
 		Data* vtk = (Data*)userData.GetPointer();
@@ -90,12 +92,14 @@ void VtkItem::setTreeView(Data* vtk, bool clear)
 {
 	vtkF3DAssimpImporter* importer = reinterpret_cast<vtkF3DAssimpImporter*>(
 		vtk->_scene->Internals->MetaImporter->Pimpl->Importers[0].Importer.Get());
+	_aiscene = importer->Internals->Scene;
+
 	_manager->setTreeModel(importer, clear);
 }
 
 void VtkItem::close()
 {
-	_timer2.stop();
+	_play = false;
 	dispatch_async([](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		Data* vtk = (Data*)userData.GetPointer();
 		vtk->_scene->clear();
@@ -105,10 +109,12 @@ void VtkItem::close()
 
 void VtkItem::play()
 {
-	_timer2.start();
-	dispatch_async([](vtkRenderWindow* renderWindow, vtkUserData userData) {
-		Data* vtk = (Data*)userData.GetPointer();
+	dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
+		Data* vtk = (Data*)userData.GetPointer();		
 		vtk->_scene->Internals->AnimationManager.ToggleAnimation();
-		});
+		_play = vtk->_scene->Internals->AnimationManager.IsPlaying();
+		});	
+	QThread::msleep(100);
 }
+
 }

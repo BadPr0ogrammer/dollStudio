@@ -18,6 +18,8 @@ Manager::Manager(App* app) : _app(app)
 void Manager::setConnect()
 {
 	_vtk->setupOpt();
+	connect(&_timer, &QTimer::timeout, this, &Manager::timerSlot);
+	_timer.start();
 }
 
 void Manager::openSource(const QUrl& url, bool clear)
@@ -26,9 +28,12 @@ void Manager::openSource(const QUrl& url, bool clear)
 	_vtk->openSource(clear);
 }
 
-void Manager::playFlag()
+void Manager::playToggle()
 {
 	_vtk->play();
+	auto range = _vtk->_animanager->GetTimeRange();
+	double d = range.second - range.first;
+	_step = 1.0 / (30 * d);
 }
 
 void Manager::setTreeModel(vtkF3DAssimpImporter* importer, bool clear)
@@ -36,10 +41,7 @@ void Manager::setTreeModel(vtkF3DAssimpImporter* importer, bool clear)
 	if (clear)
 		_treemodel->removeRows(0, _treemodel->rowCount());
 
-	const aiScene* scene = importer->Internals->Scene;
-	_aiscene = scene;
-
-	const aiNode* root = scene->mRootNode;
+	const aiNode* root = _vtk->_aiscene->mRootNode;
 	QStandardItem* item = _treemodel->invisibleRootItem();
 	item->setData(QString(root->mName.C_Str()), Qt::DisplayRole);
 	item->setData(QVariant::fromValue<const aiNode*>(root));
@@ -74,7 +76,7 @@ void Manager::treeSelChanged(const QModelIndex& idx)
 	list << "Node name: " + QString(node->mName.C_Str());
 
 	std::vector<aiBone*> vbone;
-	std::for_each(&_aiscene->mMeshes[0], &_aiscene->mMeshes[_aiscene->mNumMeshes], [&](aiMesh* mesh) {
+	std::for_each(&_vtk->_aiscene->mMeshes[0], &_vtk->_aiscene->mMeshes[_vtk->_aiscene->mNumMeshes], [&](aiMesh* mesh) {
 		std::for_each(&mesh->mBones[0], &mesh->mBones[mesh->mNumBones], [&](aiBone* bone) {
 			if (bone->mNode == node)
 				vbone.emplace_back(bone);
@@ -94,4 +96,21 @@ void Manager::treeSelChanged(const QModelIndex& idx)
 	_listmodel->setStringList(list);
 }
 
+void Manager::timerSlot()
+{
+	if (_vtk->_play) {
+		_vtk->timerCall();
+		setSliderVal(sliderval + _step);
+	}
+}
+
+void Manager::setSliderVal(float val)
+{
+	if (sliderval - val < FLT_EPSILON) {
+		sliderval = val;
+		if (sliderval > 100)
+			sliderval = 0;
+		emit sliderChanged();
+	}
+}
 }

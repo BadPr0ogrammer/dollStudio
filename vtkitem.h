@@ -3,7 +3,6 @@
 #include <QQuickVTKItem.h>
 
 #include <QString>
-#include <QTimer>
 #include <QStandardItem>
 #include <QTreeView>
 
@@ -43,12 +42,14 @@ public:
 		f3d::detail::window_impl* _win = nullptr;
 		f3d::detail::scene_impl* _scene = nullptr;
 
-		vtkSmartPointer<vtkCallbackCommand> _timer1;
+		vtkSmartPointer<vtkCallbackCommand> _timercb;
 	};
 	QString _fname;
 	f3d::options _options;
-	QTimer _timer2;
 	Manager* _manager = nullptr;
+	bool _play = false;
+	f3d::detail::animationManager* _animanager = nullptr;
+	const aiScene* _aiscene = nullptr;
 
 	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
 	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
@@ -59,7 +60,6 @@ public:
 	void setupOpt();
 	void setTreeView(Data* vtk, bool clear);
 	void traversTree(QStandardItem* parent, const aiNode* node);
-public slots:
-	void timerSlot();
+	void timerCall();
 };
 }
