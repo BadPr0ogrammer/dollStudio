@@ -20,7 +20,7 @@ App::App(int& argc, char** argv)
 
 	_application = new QGuiApplication(argc, argv);
 	_engine = new QQmlApplicationEngine();
-	_manager = new Manager(this);
+	_manager = new Manager(_engine);
 
 	qmlRegisterType<Manager>("Dollstudio", 1, 0, "Manager");
 	qmlRegisterType<VtkItem>("Dollstudio", 1, 0, "VtkItem");
@@ -32,10 +32,9 @@ App::App(int& argc, char** argv)
 	fileSelector.setExtraSelectors(QStringList() << QLatin1String("nativemenubar"));
 #endif
 	_engine->setInitialProperties({
-		{ "projectManager", QVariant::fromValue(_manager) },
-		{ "treeModel", QVariant::fromValue(_manager->_treemodel) },
-		{ "listModel", QVariant::fromValue(_manager->_listmodel) },
-		{ "sliderVal", QVariant::fromValue(_manager->sliderval) }
+        { "projectManager", QVariant::fromValue(_manager) },
+        { "treeModel",      QVariant::fromValue(_manager->_treemodel) },
+        { "listModel",      QVariant::fromValue(_manager->_listmodel) }
 		});
 	_engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
 	if (_engine->rootObjects().isEmpty()) {

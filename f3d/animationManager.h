@@ -110,7 +110,7 @@ public:
   animationManager(animationManager const&) = delete;
   void operator=(animationManager const&) = delete;
 
-private:
+// b private:
   /**
    * Prepare time range and internal members for animation indices from options
    * Return early if already prepared for the current subset of animation in the options

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.impl
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import Qt.labs.platform as Platform
 
 import Dollstudio 1.0
@@ -50,10 +51,8 @@ ApplicationWindow {
                 rightPadding: 4
                 bottomPadding: 4
                 height: 30
-                from: 0.0
-                to: 100.0
                 value: projectManager.sliderVal
-                onMoved: projectManager.sliderValue = value
+                onMoved: projectManager.onMoved(value)
             }
         }
 
@@ -139,12 +138,19 @@ ApplicationWindow {
         id: openProjectDialog
         objectName: "openProjectDialog"        
         nameFilters: ["FBX files (*.fbx)","All files (*)"]
-        onAccepted: projectManager.openSource(file);
+        onAccepted: {
+            if (!projectManager.openSource(file)) openFileErrorDlg.open 
+        }
     } 
 
     DSqml.AboutDialog {
         id: aboutDialog
         parent: Overlay.overlay
         anchors.centerIn: parent
+    }
+    MessageDialog { 
+        id: openFileErrorDlg
+        buttons: MessageDialog.Ok 
+        text: "Unable to open the file!" 
     }
 }

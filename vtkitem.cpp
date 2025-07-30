@@ -22,6 +22,7 @@ void VtkItem::timerCall()
 		if (renderWindow && renderWindow->GetInteractor())
 			renderWindow->GetInteractor()->InvokeEvent(vtkCommand::InteractionEvent);
 		});
+	QThread::msleep(10);
 }
 
 VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
@@ -54,8 +55,8 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 
 void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
 {
-	_play = false;
 	_animanager = nullptr;
+	_playf = false;
 	auto* vtk = Data::SafeDownCast(userData);
 
 	vtk->_scene->clear();
@@ -69,9 +70,10 @@ void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
 
 bool VtkItem::openSource(bool clear)
 {
-	_play = false;
 	dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		bool ret = false;
+		_playf = false;
+		_animanager->StopAnimation();
 		Data* vtk = (Data*)userData.GetPointer();
 		if (renderWindow->IsCurrent())
 		{
@@ -85,6 +87,7 @@ bool VtkItem::openSource(bool clear)
 		}
 		return ret;
 		});
+	QThread::msleep(10);
 	return false;
 }
 
@@ -99,22 +102,38 @@ void VtkItem::setTreeView(Data* vtk, bool clear)
 
 void VtkItem::close()
 {
-	_play = false;
-	dispatch_async([](vtkRenderWindow* renderWindow, vtkUserData userData) {
+	dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		Data* vtk = (Data*)userData.GetPointer();
+		_playf = false;
+		_animanager->StopAnimation();
 		vtk->_scene->clear();
 		renderWindow->Render();
 		});
+	QThread::msleep(10);
 }
 
 void VtkItem::play()
 {
 	dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		Data* vtk = (Data*)userData.GetPointer();		
-		vtk->_scene->Internals->AnimationManager.ToggleAnimation();
-		_play = vtk->_scene->Internals->AnimationManager.IsPlaying();
+		_animanager->ToggleAnimation();
+		_playf = _animanager->IsPlaying();
 		});	
-	QThread::msleep(100);
+	QThread::msleep(10);
+}
+
+void VtkItem::sliderMove()
+{
+	dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
+		Data* vtk = (Data*)userData.GetPointer();
+		if (_playf) {
+			_playf = false;
+			_animanager->StopAnimation();
+		}
+		double d = _animanager->TimeRange[1] - _animanager->TimeRange[0];
+		_animanager->LoadAtTime(_manager->_sliderval * d);
+		});
+	QThread::msleep(10);
 }
 
 }

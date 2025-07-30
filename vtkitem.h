@@ -46,10 +46,11 @@ public:
 	};
 	QString _fname;
 	f3d::options _options;
-	Manager* _manager = nullptr;
-	bool _play = false;
-	f3d::detail::animationManager* _animanager = nullptr;
-	const aiScene* _aiscene = nullptr;
+
+	Manager*						_manager = nullptr;
+    bool							_playf = false;
+	f3d::detail::animationManager*	_animanager = nullptr;
+	const aiScene*					_aiscene = nullptr;
 
 	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
 	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
@@ -61,5 +62,6 @@ public:
 	void setTreeView(Data* vtk, bool clear);
 	void traversTree(QStandardItem* parent, const aiNode* node);
 	void timerCall();
+	void sliderMove();
 };
 }

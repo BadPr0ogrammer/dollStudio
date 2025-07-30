@@ -1,5 +1,6 @@
 #include <QStandardItemModel>
 #include <QStringList>
+#include <QThread>
 
 #include "app.h"
 #include "vtkitem.h"
@@ -9,30 +10,30 @@
 
 namespace DS
 {
-Manager::Manager(App* app) : _app(app)
+Manager::Manager(QQmlEngine* engine) 
 {
-	_treemodel = new QStandardItemModel(_app->_engine);
-	_listmodel = new QStringListModel(_app->_engine);
+	_treemodel = new QStandardItemModel(engine);
+	_listmodel = new QStringListModel(engine);
 }
 
 void Manager::setConnect()
 {
 	_vtk->setupOpt();
+
 	connect(&_timer, &QTimer::timeout, this, &Manager::timerSlot);
 	_timer.start();
 }
 
-void Manager::openSource(const QUrl& url, bool clear)
+bool Manager::openSource(const QUrl& url, bool clear)
 {
 	_vtk->_fname = url.toLocalFile();
-	_vtk->openSource(clear);
+	return _vtk->openSource(clear);
 }
 
 void Manager::playToggle()
 {
 	_vtk->play();
-	auto range = _vtk->_animanager->GetTimeRange();
-	double d = range.second - range.first;
+	double d = _vtk->_animanager->TimeRange[1] - _vtk->_animanager->TimeRange[0];
 	_step = 1.0 / (30 * d);
 }
 
@@ -98,19 +99,26 @@ void Manager::treeSelChanged(const QModelIndex& idx)
 
 void Manager::timerSlot()
 {
-	if (_vtk->_play) {
+	if (_vtk->_playf) {
 		_vtk->timerCall();
-		setSliderVal(sliderval + _step);
+		setSliderVal(_sliderval + _step);
 	}
 }
 
-void Manager::setSliderVal(float val)
+void Manager::setSliderVal(double val)
 {
-	if (sliderval - val < FLT_EPSILON) {
-		sliderval = val;
-		if (sliderval > 100)
-			sliderval = 0;
+	if (_sliderval - val < 2*DBL_EPSILON) {
+		_sliderval = val;
+		if (_sliderval > 1)
+			_sliderval = 0;
 		emit sliderChanged();
 	}
 }
+
+void Manager::onMoved(double val)
+{
+	_sliderval = val;
+	_vtk->sliderMove();
+}
+
 }
