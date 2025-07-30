@@ -17,7 +17,7 @@ App::App(int& argc, char** argv)
 	QApplication::setApplicationName("dollstudio");
 	QApplication::setApplicationDisplayName("Dolls-Studio 3D");
 	QApplication::setApplicationVersion("0.1");
-
+	
 	_application = new QGuiApplication(argc, argv);
 	_engine = new QQmlApplicationEngine();
 	_manager = new Manager(_engine);

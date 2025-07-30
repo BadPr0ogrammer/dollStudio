@@ -4,6 +4,7 @@ import QtQuick.Controls.impl
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import Qt.labs.platform as Platform
+import QtQuick.Controls.Material
 
 import Dollstudio 1.0
 import  "./DSqml" as DSqml
@@ -14,6 +15,8 @@ ApplicationWindow {
     height: 600
     visible: true
     title: qsTr("Hello World")
+    Material.theme: Material.Dark
+    Material.accent: Material.Teal
 
     required property Manager projectManager
     required property TreeModel treeModel
@@ -51,8 +54,10 @@ ApplicationWindow {
                 rightPadding: 4
                 bottomPadding: 4
                 height: 30
+                snapMode: Slider.SnapAlways
+                stepSize: 0.1
                 value: projectManager.sliderVal
-                onMoved: projectManager.onMoved(value)
+                onMoved: projectManager.onMoved(value)             
             }
         }
 
@@ -88,7 +93,7 @@ ApplicationWindow {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    Label { color: "#606060"; text: qsTr("Offset matrix") }
+                    Label { color: "#009688"; text: qsTr("Offset matrix") }
                     ListView {
                         id: propertyList
                         objectName: "propertyList"
@@ -97,7 +102,8 @@ ApplicationWindow {
                         model: listModel 
                         delegate: Text { 
                             text: display 
-                            font.family: "Courier New"
+                            font.family: "monospace"
+                            color: "#009688"
                         }
                     }
                 }
