@@ -115,4 +115,5 @@ CMakeUserPresets.json
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #cmake-build-*
 /.vs
-/out/build/debug
+/out
+/build
