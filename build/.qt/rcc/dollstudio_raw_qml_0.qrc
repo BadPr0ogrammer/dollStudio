@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/qt/qml/Dollstudio/">
+    <file alias="main.qml">C:/Users/user/dollStudio/main.qml</file>
+    <file alias="AboutDialog.qml">C:/Users/user/dollStudio/AboutDialog.qml</file>
+    <file alias="OptionsDialog.qml">C:/Users/user/dollStudio/OptionsDialog.qml</file>
+    <file alias="AppearanceTab.qml">C:/Users/user/dollStudio/AppearanceTab.qml</file>
+  </qresource>
+</RCC>
+

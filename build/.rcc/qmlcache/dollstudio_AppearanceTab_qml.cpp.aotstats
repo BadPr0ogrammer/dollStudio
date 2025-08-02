@@ -1,0 +1,52 @@
+[
+    {
+        "moduleFiles": [
+            {
+                "entries": [
+                    {
+                        "codegenSuccessful": false,
+                        "column": 5,
+                        "durationMicroseconds": 1106,
+                        "errorMessage": "Cannot access value for name projectManager",
+                        "functionName": "applyChangesToSettings",
+                        "line": 11
+                    },
+                    {
+                        "codegenSuccessful": false,
+                        "column": 5,
+                        "durationMicroseconds": 460,
+                        "errorMessage": "Cannot access value for name projectManager",
+                        "functionName": "revertToOldSettings",
+                        "line": 16
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 38,
+                        "durationMicroseconds": 254,
+                        "errorMessage": "",
+                        "functionName": "policy",
+                        "line": 27
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 20,
+                        "durationMicroseconds": 146,
+                        "errorMessage": "",
+                        "functionName": "width",
+                        "line": 35
+                    },
+                    {
+                        "codegenSuccessful": false,
+                        "column": 26,
+                        "durationMicroseconds": 862,
+                        "errorMessage": "Cannot access value for name projectManager",
+                        "functionName": "checked",
+                        "line": 42
+                    }
+                ],
+                "filePath": "C:/Users/user/dollStudio/AppearanceTab.qml"
+            }
+        ],
+        "moduleId": "Dollstudio(dollstudio)"
+    }
+]

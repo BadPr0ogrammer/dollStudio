@@ -1,0 +1,84 @@
+[
+    {
+        "moduleFiles": [
+            {
+                "entries": [
+                    {
+                        "codegenSuccessful": true,
+                        "column": 22,
+                        "durationMicroseconds": 430,
+                        "errorMessage": "",
+                        "functionName": "standardButtons",
+                        "line": 20
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 17,
+                        "durationMicroseconds": 117,
+                        "errorMessage": "",
+                        "functionName": "onAccepted",
+                        "line": 22
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 20,
+                        "durationMicroseconds": 67,
+                        "errorMessage": "",
+                        "functionName": "onAboutToShow",
+                        "line": 26
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 5,
+                        "durationMicroseconds": 158,
+                        "errorMessage": "",
+                        "functionName": "applyChangesToSettings",
+                        "line": 28
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 5,
+                        "durationMicroseconds": 114,
+                        "errorMessage": "",
+                        "functionName": "revertToOldSettings",
+                        "line": 33
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 21,
+                        "durationMicroseconds": 120,
+                        "errorMessage": "",
+                        "functionName": "theme",
+                        "line": 17
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 22,
+                        "durationMicroseconds": 114,
+                        "errorMessage": "",
+                        "functionName": "accent",
+                        "line": 18
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 23,
+                        "durationMicroseconds": 97,
+                        "errorMessage": "",
+                        "functionName": "currentIndex",
+                        "line": 51
+                    },
+                    {
+                        "codegenSuccessful": true,
+                        "column": 23,
+                        "durationMicroseconds": 85,
+                        "errorMessage": "",
+                        "functionName": "fill",
+                        "line": 50
+                    }
+                ],
+                "filePath": "C:/Users/user/dollStudio/OptionsDialog.qml"
+            }
+        ],
+        "moduleId": "Dollstudio(dollstudio)"
+    }
+]

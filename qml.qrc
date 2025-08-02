@@ -1,6 +1,18 @@
 <RCC>
   <qresource prefix="/">
     <file>main.qml</file>
-    <file>DSqml/AboutDialog.qml</file>
+    <file>AboutDialog.qml</file>
+    <file>OptionsDialog.qml</file>
+    <file>AppearanceTab.qml</file>
   </qresource>
+    <qresource prefix="/">
+        <file>icons/open.png</file>
+        <file>icons/play_circle.png</file>
+        <file>icons/stop_circle.png</file>
+        <file>icons/cancel.png</file>
+        <file>icons/exit.png</file>
+        <file>icons/settings.png</file>
+        <file>icons/view_all.png</file>
+        <file>icons/photo_camera.png</file>
+    </qresource>
 </RCC>

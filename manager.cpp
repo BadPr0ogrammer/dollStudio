@@ -5,6 +5,7 @@
 #include "app.h"
 #include "vtkitem.h"
 #include "manager.h"
+#include "settings.h"
 
 #include "assimp/mesh.h"
 
@@ -111,7 +112,7 @@ void Manager::setSliderVal(double val)
 		_sliderval = val;
 		if (_sliderval > 1)
 			_sliderval = 0;
-		emit sliderChanged();
+		emit sliderValChanged();
 	}
 }
 
@@ -119,6 +120,30 @@ void Manager::onMoved(double val)
 {
 	_sliderval = val;
 	_vtk->sliderMove();
+}
+
+void Manager::closeSource()
+{
+    _vtk->close();
+}
+
+void Manager::cameraReset()
+{
+    _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
+        VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
+        vtk->_win->getCamera().resetToBounds();
+    });
+    QThread::msleep(10);
+}
+
+void Manager::showAxis()
+{
+    _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
+        VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
+        _options->setShowAxis(!_options->showAxis());
+        vtk->_win->Internals->Renderer->ShowAxis(_options->showAxis());
+    });
+    QThread::msleep(10);
 }
 
 }

@@ -8,6 +8,7 @@
 namespace DS
 {
 class Manager;
+class Settings;
 class App
 {
 public:
@@ -17,6 +18,7 @@ public:
 
 	QGuiApplication*		_application = nullptr;
 	QQmlApplicationEngine*	_engine = nullptr;
+	Settings*				_options = nullptr;
 	Manager*				_manager = nullptr;
 };
 }

@@ -1,0 +1,7 @@
+module Dollstudio
+typeinfo dollstudio.qmltypes
+prefer :/qt/qml/Dollstudio/
+AboutDialog 1.0 AboutDialog.qml
+OptionsDialog 1.0 OptionsDialog.qml
+AppearanceTab 1.0 AppearanceTab.qml
+

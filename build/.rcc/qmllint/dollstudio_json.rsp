@@ -1,0 +1,15 @@
+--bare
+-I
+C:/Users/user/dollStudio/build
+-I
+C:/Qt/6.9.1/msvc2022_64/qml
+--resource
+C:/Users/user/dollStudio/build/.qt/rcc/qmake_Dollstudio.qrc
+--resource
+C:/Users/user/dollStudio/build/.qt/rcc/dollstudio_raw_qml_0.qrc
+C:/Users/user/dollStudio/main.qml
+C:/Users/user/dollStudio/AboutDialog.qml
+C:/Users/user/dollStudio/OptionsDialog.qml
+C:/Users/user/dollStudio/AppearanceTab.qml
+--json
+C:/Users/user/dollStudio/build/dollstudio_qmllint.json

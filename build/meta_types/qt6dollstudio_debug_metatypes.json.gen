@@ -1,0 +1,196 @@
+[
+    {
+        "classes": [
+            {
+                "classInfos": [
+                    {
+                        "name": "QML.Element",
+                        "value": "auto"
+                    }
+                ],
+                "className": "Manager",
+                "lineNumber": 19,
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "url",
+                                "type": "QUrl"
+                            },
+                            {
+                                "name": "clear",
+                                "type": "bool"
+                            }
+                        ],
+                        "index": 4,
+                        "name": "openSource",
+                        "returnType": "bool"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "url",
+                                "type": "QUrl"
+                            }
+                        ],
+                        "index": 5,
+                        "isCloned": true,
+                        "name": "openSource",
+                        "returnType": "bool"
+                    },
+                    {
+                        "access": "public",
+                        "index": 6,
+                        "name": "playToggle",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "idx",
+                                "type": "QModelIndex"
+                            }
+                        ],
+                        "index": 7,
+                        "name": "treeSelChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "val",
+                                "type": "double"
+                            }
+                        ],
+                        "index": 8,
+                        "name": "onMoved",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 9,
+                        "name": "closeSource",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 10,
+                        "name": "cameraReset",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 11,
+                        "name": "showAxis",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 0,
+                        "name": "sliderVal",
+                        "notify": "sliderChanged",
+                        "read": "sliderVal",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "double",
+                        "user": false,
+                        "write": "setSliderVal"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 1,
+                        "member": "_treemodel",
+                        "name": "treeModel",
+                        "notify": "treeModelChanged",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QStandardItemModel*",
+                        "user": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 2,
+                        "member": "_listmodel",
+                        "name": "listModel",
+                        "notify": "listModelChanged",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QStringListModel*",
+                        "user": false
+                    }
+                ],
+                "qualifiedClassName": "DS::Manager",
+                "signals": [
+                    {
+                        "access": "public",
+                        "index": 0,
+                        "name": "sliderChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 1,
+                        "name": "treeModelChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 2,
+                        "name": "listModelChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "public",
+                        "index": 3,
+                        "name": "timerSlot",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "manager.h",
+        "outputRevision": 69
+    },
+    {
+        "classes": [
+            {
+                "className": "VtkItem",
+                "lineNumber": 32,
+                "object": true,
+                "qualifiedClassName": "DS::VtkItem",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QQuickVTKItem"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "vtkitem.h",
+        "outputRevision": 69
+    }
+]

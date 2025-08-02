@@ -1,0 +1,18 @@
+{
+    "classes": [
+        {
+            "className": "VtkItem",
+            "lineNumber": 32,
+            "object": true,
+            "qualifiedClassName": "DS::VtkItem",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QQuickVTKItem"
+                }
+            ]
+        }
+    ],
+    "inputFile": "vtkitem.h",
+    "outputRevision": 69
+}

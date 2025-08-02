@@ -30,6 +30,8 @@ qt_add_executable(${MYNAME}
     manager.h 
     vtkitem.cpp 
     vtkitem.h
+    settings.cpp
+    settings.h
     qml.qrc
 
     f3d/animationManager.cxx
@@ -135,7 +137,9 @@ qt_add_qml_module(${MYNAME}
     VERSION 1.0
     QML_FILES
         main.qml 
-	DSqml/AboutDialog.qml
+	AboutDialog.qml
+	OptionsDialog.qml
+	AppearanceTab.qml
 )
 
 if (WIN32)

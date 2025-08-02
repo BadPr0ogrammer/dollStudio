@@ -1,0 +1,10 @@
+-I
+C:/Users/user/dollStudio/build
+-I
+C:/Qt/6.9.1/msvc2022_64/qml
+--resource
+C:/Users/user/dollStudio/build/.qt/rcc/qmake_Dollstudio.qrc
+--resource
+C:/Users/user/dollStudio/build/.qt/rcc/dollstudio_raw_qml_0.qrc
+--module
+Dollstudio

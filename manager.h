@@ -15,11 +15,15 @@ class aiNode;
 class vtkF3DAssimpImporter;
 namespace DS
 {
+class Settings;
 class VtkItem;
 class Manager : public QObject
 {
 	Q_OBJECT
-	Q_PROPERTY(double sliderVal READ sliderVal WRITE setSliderVal NOTIFY sliderChanged)
+    QML_ELEMENT
+	Q_PROPERTY(double sliderVal READ sliderVal WRITE setSliderVal NOTIFY sliderValChanged)
+    Q_PROPERTY(QStandardItemModel* treeModel MEMBER _treemodel NOTIFY    treeModelChanged)
+    Q_PROPERTY(QStringListModel*   listModel MEMBER _listmodel NOTIFY    listModelChanged)
 
 public:
 	Manager(QQmlEngine* engine);
@@ -28,7 +32,8 @@ public:
 	QStringListModel*	_listmodel = nullptr;
 	VtkItem*			_vtk = nullptr;
 	QQuickItem*			_slider = nullptr;
-	
+    Settings*           _options = nullptr;
+
 	QTimer _timer;
 	double _step = 0;
 
@@ -44,8 +49,13 @@ public:
 	Q_INVOKABLE void playToggle();
 	Q_INVOKABLE void treeSelChanged(const QModelIndex& idx);
 	Q_INVOKABLE void onMoved(double val);
+    Q_INVOKABLE void closeSource();
+    Q_INVOKABLE void cameraReset();
+    Q_INVOKABLE void showAxis();
 signals:	
-	void sliderChanged();
+	void sliderValChanged();
+    void treeModelChanged();
+    void listModelChanged();
 public slots:
 	void timerSlot();
 };

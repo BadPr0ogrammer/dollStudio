@@ -8,6 +8,7 @@
 
 #include "manager.h"
 #include "vtkitem.h"
+#include "settings.h"
 
 namespace DS
 {
@@ -20,12 +21,13 @@ App::App(int& argc, char** argv)
 	
 	_application = new QGuiApplication(argc, argv);
 	_engine = new QQmlApplicationEngine();
+	_options = new Settings(_engine);
 	_manager = new Manager(_engine);
+	_manager->_options = _options;
 
 	qmlRegisterType<Manager>("Dollstudio", 1, 0, "Manager");
 	qmlRegisterType<VtkItem>("Dollstudio", 1, 0, "VtkItem");
-	qmlRegisterType<QStandardItemModel>("Dollstudio", 1, 0, "TreeModel");
-	qmlRegisterType<QStringListModel>("Dollstudio", 1, 0, "ListModel");
+	qmlRegisterType<Settings>("Dollstudio", 1, 0, "Settings");
 
 #if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
 	QQmlFileSelector fileSelector(_engine);
@@ -33,8 +35,7 @@ App::App(int& argc, char** argv)
 #endif
 	_engine->setInitialProperties({
         { "projectManager", QVariant::fromValue(_manager) },
-        { "treeModel",      QVariant::fromValue(_manager->_treemodel) },
-        { "listModel",      QVariant::fromValue(_manager->_listmodel) }
+		{ "options", QVariant::fromValue(_options) },
 		});
 	_engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
 	if (_engine->rootObjects().isEmpty()) {
@@ -70,6 +71,7 @@ void App::setup()
 App::~App()
 {
 	delete _engine;
+	delete _application;
 }
 
 }
