@@ -18,7 +18,7 @@ public:
 
 	QGuiApplication*		_application = nullptr;
 	QQmlApplicationEngine*	_engine = nullptr;
-	Settings*				_options = nullptr;
+	Settings*				_settings = nullptr;
 	Manager*				_manager = nullptr;
 };
 }

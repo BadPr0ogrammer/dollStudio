@@ -32,7 +32,7 @@ public:
 	QStringListModel*	_listmodel = nullptr;
 	VtkItem*			_vtk = nullptr;
 	QQuickItem*			_slider = nullptr;
-    Settings*           _options = nullptr;
+    Settings*           _settings = nullptr;
 
 	QTimer _timer;
 	double _step = 0;

@@ -7,8 +7,8 @@ namespace f3d::detail
 {
 
 //----------------------------------------------------------------------------
-scene_impl::scene_impl(options& options, window_impl& window)
-  : Internals(std::make_unique<scene_impl::internals>(options, window))
+scene_impl::scene_impl(const DS::Settings* psettings, window_impl& window)
+  : Internals(std::make_unique<scene_impl::internals>(psettings, window))
 {
 }
 

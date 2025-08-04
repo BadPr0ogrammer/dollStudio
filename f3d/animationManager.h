@@ -20,10 +20,11 @@ class vtkImporter;
 class vtkRenderWindow;
 class vtkRenderWindowInteractor;
 
+namespace DS {
+class Settings;
+}
 namespace f3d
 {
-class options;
-
 namespace detail
 {
 class interactor_impl;
@@ -32,7 +33,7 @@ class window_impl;
 class animationManager
 {
 public:
-  animationManager(options& options, window_impl& window);
+  animationManager(const DS::Settings* psettings, window_impl& window);
   ~animationManager() = default;
 
   /**
@@ -118,7 +119,7 @@ public:
    */
   void PrepareForAnimationIndices();
 
-  options& Options;
+  const DS::Settings* settings = nullptr;
   window_impl& Window;
   vtkImporter* Importer = nullptr;
   // b interactor_impl* Interactor = nullptr;

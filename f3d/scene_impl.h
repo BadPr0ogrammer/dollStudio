@@ -15,10 +15,12 @@
 
 class vtkRenderWindowInteractor;
 
+namespace DS {
+class Settings;
+}
+
 namespace f3d
 {
-class options;
-
 namespace detail
 {
 //class interactor_impl;
@@ -30,7 +32,7 @@ public:
   /**
    * Documented public API
    */
-  scene_impl(options& options, window_impl& window);
+  scene_impl(const DS::Settings* psettings, window_impl& window);
   ~scene_impl();
   scene& add(const std::filesystem::path& filePath) override;
   scene& add(const std::vector<std::filesystem::path>& filePath) override;
@@ -63,7 +65,6 @@ public:
 }
 
 #include "animationManager.h"
-#include "options.h"
 #include "scene.h"
 #include "window_impl.h"
 
@@ -83,6 +84,8 @@ public:
 
 #include <vector>
 
+#include "settings.h"
+
 namespace f3d
 {
 namespace detail
@@ -90,10 +93,10 @@ namespace detail
 class scene_impl::internals
 {
 public:
-    internals(options& options, window_impl& window)
-        : Options(options)
+    internals(const DS::Settings* psettings, window_impl& window)
+        : settings(psettings)
         , Window(window)
-        , AnimationManager(options, window)
+        , AnimationManager(psettings, window)
     {
         this->MetaImporter->SetRenderWindow(this->Window.GetRenderWindow());
         this->Window.SetImporter(this->MetaImporter);
@@ -170,17 +173,17 @@ public:
         }
         */
         // Manage progress bar
-        vtkNew<vtkProgressBarWidget> progressWidget;
-        vtkNew<vtkTimerLog> timer;
-        scene_impl::internals::ProgressDataStruct callbackData;
-        callbackData.timer = timer;
-        callbackData.widget = progressWidget;
-        if (//this->Options.ui.loader_progress && 
-            this->Interactor)
-        {
-            scene_impl::internals::CreateProgressRepresentationAndCallback(
-                &callbackData, this->MetaImporter, this->Interactor);
-        }
+        //vtkNew<vtkProgressBarWidget> progressWidget;
+        //vtkNew<vtkTimerLog> timer;
+        //scene_impl::internals::ProgressDataStruct callbackData;
+        //callbackData.timer = timer;
+        //callbackData.widget = progressWidget;
+        //if (//this->Options.ui.loader_progress && 
+            //this->Interactor)
+        //{
+        //    scene_impl::internals::CreateProgressRepresentationAndCallback(
+        //        &callbackData, this->MetaImporter, this->Interactor);
+        //}
 
         // Update the meta importer, the will only update importers that have not been updated before
 #if VTK_VERSION_NUMBER >= VTK_VERSION_CHECK(9, 3, 20240707)
@@ -188,7 +191,7 @@ public:
         {
             this->MetaImporter->RemoveObservers(vtkCommand::ProgressEvent);
             // b progressWidget->Off();
-            progressWidget->On();
+            //progressWidget->On();
 
             this->MetaImporter->Clear();
             this->Window.Initialize();
@@ -199,9 +202,9 @@ public:
 #endif
 
         // Remove anything progress related if any
-        this->MetaImporter->RemoveObservers(vtkCommand::ProgressEvent);
-        progressWidget->Off();
-
+        //this->MetaImporter->RemoveObservers(vtkCommand::ProgressEvent);
+        //progressWidget->Off();
+        //
         // Initialize the animation using temporal information from the importer
         this->AnimationManager.Initialize();
 
@@ -248,7 +251,7 @@ public:
         window.PrintSceneDescription(log::VerboseLevel::DEBUG);
     }
 */
-    const options& Options;
+    const DS::Settings* settings = nullptr;
     window_impl& Window;
     //interactor_impl* Interactor = nullptr;
     vtkRenderWindowInteractor* Interactor = nullptr;

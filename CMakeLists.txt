@@ -40,8 +40,6 @@ qt_add_executable(${MYNAME}
     f3d/init.h
     f3d/window_impl.cxx
     f3d/window_impl.h
-    f3d/options.cxx
-    f3d/options.h
     f3d/scene_impl.cxx
     f3d/scene_impl.h
     f3d/camera_impl.cxx

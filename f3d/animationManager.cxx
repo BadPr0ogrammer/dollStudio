@@ -1,7 +1,6 @@
 #include "animationManager.h"
 
 #include "macros.h"
-#include "options.h"
 #include "window_impl.h"
 
 #include <QDebug>
@@ -21,9 +20,8 @@
 namespace f3d::detail
 {
 //----------------------------------------------------------------------------
-animationManager::animationManager(options& options, window_impl& window)
-  : Options(options)
-  , Window(window)
+animationManager::animationManager(const DS::Settings* psettings, window_impl& window)
+  : settings(psettings), Window(window)
 {
 }
 

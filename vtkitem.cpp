@@ -30,9 +30,9 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 	vtkNew<Data> vtk;
 	vtk->_vtkItem = this;
 
-	vtk->_win = new f3d::detail::window_impl(_options, f3d::window::Type::WGL, false, nullptr, renderWindow);
+	vtk->_win = new f3d::detail::window_impl(_manager->_settings, f3d::window::Type::WGL, false, nullptr, renderWindow);
 	vtk->_win->SetInteractor(renderWindow->GetInteractor());
-	vtk->_scene = new f3d::detail::scene_impl(_options, *vtk->_win);
+	vtk->_scene = new f3d::detail::scene_impl(_manager->_settings, *vtk->_win);
 	vtk->_scene->SetInteractor(renderWindow->GetInteractor());
 
 	vtk->_timercb = vtkSmartPointer<vtkCallbackCommand>::New();

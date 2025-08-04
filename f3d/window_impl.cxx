@@ -7,9 +7,9 @@ using namespace f3d;
 using namespace f3d::detail;
 
 //----------------------------------------------------------------------------
-window_impl::window_impl(const options& options, const std::optional<Type>& type, bool offscreen,
+window_impl::window_impl(const DS::Settings* psettings, const std::optional<Type>& type, bool offscreen,
   const context::function& getProcAddress, vtkRenderWindow *vtkwindow)
-  : Internals(std::make_unique<window_impl::internals>(options))
+  : Internals(std::make_unique<window_impl::internals>(psettings))
 {
   this->Internals->GetProcAddress = getProcAddress;
     /* b

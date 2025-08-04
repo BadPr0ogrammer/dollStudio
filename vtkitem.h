@@ -22,7 +22,6 @@
 #include "animationManager.h"
 #include "window_impl.h"
 #include "scene_impl.h"
-#include "options.h"
 
 class aiNode;
 namespace DS
@@ -44,7 +43,6 @@ public:
 		vtkSmartPointer<vtkCallbackCommand> _timercb;
 	};
 	QString _fname;
-	f3d::options _options;
 
 	Manager*						_manager = nullptr;
     bool							_playf = false;

@@ -22,10 +22,12 @@ class vtkOpenGLRenderer;
 class vtkF3DMetaImporter;
 class vtkRenderWindowInteractor;
 
+namespace DS {
+class Settings;
+}
+
 namespace f3d
 {
-class options;
-
 namespace detail
 {
 class window_impl : public window
@@ -35,7 +37,7 @@ public:
    * Create the internal vtkRenderWindow using the offscreen param
    * and store option ref for later usage
    */
-  window_impl(const options& options, const std::optional<Type>& type, bool offscreen,
+  window_impl(const DS::Settings* psettings, const std::optional<Type>& type, bool offscreen,
     const context::function& getProcAddress, vtkRenderWindow *vtkwindow);
   /**
    * Default destructor
@@ -133,10 +135,8 @@ public:
 }
 }
 
-// b #include "engine.h"
 #include "camera_impl.h"
 #include "macros.h"
-#include "options.h"
 #include "utils.h"
 
 #include "vtkF3DGenericImporter.h"
@@ -170,6 +170,7 @@ public:
 
 #include <sstream>
 
+#include "settings.h"
 
 namespace fs = std::filesystem;
 
@@ -178,8 +179,8 @@ namespace f3d::detail
     class window_impl::internals
     {
     public:
-        explicit internals(const options& options)
-            : Options(options)
+        explicit internals(const DS::Settings* psettings)
+            : settings(psettings)
         {
         }
 
@@ -232,7 +233,7 @@ namespace f3d::detail
         std::unique_ptr<camera_impl> Camera;
         //vtkNew<vtkF3DRenderer> Renderer;
         vtkNew<vtkOpenGLRenderer> Renderer;
-        const options& Options;
+        const DS::Settings* settings = nullptr;
         fs::path CachePath;
         context::function GetProcAddress;
     };

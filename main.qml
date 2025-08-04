@@ -19,7 +19,7 @@ ApplicationWindow {
     Material.accent: Material.Teal
 
     required property Manager projectManager
-    required property Settings options
+    required property Settings settings
     property alias openProjectDialog: openProjectDialog
 
     property var aboutDialog
