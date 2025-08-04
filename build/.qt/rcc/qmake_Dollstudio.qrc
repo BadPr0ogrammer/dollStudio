@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/qt/qml/Dollstudio">
-    <file alias="qmldir">C:/Users/user/dollStudio/build/Dollstudio/qmldir</file>
-  </qresource>
-</RCC>
-
