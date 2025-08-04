@@ -1,3 +1,4 @@
+#if 0
 #include "vtkF3DUserRenderPass.h"
 
 #include "vtkObjectFactory.h"
@@ -124,3 +125,4 @@ void vtkF3DUserRenderPass::ReleaseGraphicsResources(vtkWindow* w)
     this->ColorTexture->ReleaseGraphicsResources(w);
   }
 }
+#endif

@@ -1,3 +1,4 @@
+#if 0
 /**
  * @class   vtkF3DUserRenderPass
  * @brief   Implement a post-processing using user string.
@@ -78,4 +79,5 @@ private:
   std::string UserShader;
 };
 
+#endif
 #endif

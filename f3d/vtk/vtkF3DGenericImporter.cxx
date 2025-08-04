@@ -1,6 +1,7 @@
 #include "vtkF3DGenericImporter.h"
 
-#include "F3DLog.h"
+#include <QDebug>
+
 #include "vtkF3DPostProcessFilter.h"
 
 #include <vtkActor.h>
@@ -272,7 +273,7 @@ bool vtkF3DGenericImporter::UpdateAtTimeValue(double timeValue)
   if (!this->Pimpl->PostPro->UpdateTimeStep(timeValue) ||
     !this->Pimpl->Reader->GetOutputDataObject(0))
   {
-    F3DLog::Print(F3DLog::Severity::Warning, "A reader failed to update at a timeValue");
+    qDebug() << "A reader failed to update at a timeValue";
     return false;
   }
 

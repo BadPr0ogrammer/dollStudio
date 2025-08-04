@@ -1,4 +1,5 @@
 #include "vtkF3DMetaImporter.h"
+#include <QDebug>
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
@@ -27,7 +28,7 @@ void vtkF3DMetaImporter::Clear()
   this->Pimpl->ColoringActorsAndMappers.clear();
   this->Pimpl->PointSpritesActorsAndMappers.clear();
   this->Pimpl->VolumePropsAndMappers.clear();
-  this->Pimpl->ColoringInfoHandler.ClearColoringInfo();
+  // b this->Pimpl->ColoringInfoHandler.ClearColoringInfo();
   this->Modified();
 }
 
@@ -102,9 +103,7 @@ bool vtkF3DMetaImporter::Update()
   {
     if (this->Pimpl->CameraIndex < 0)
     {
-      F3DLog::Print(F3DLog::Severity::Warning,
-        "Invalid camera index: " + std::to_string(this->Pimpl->CameraIndex.value()) +
-          ". Camera may be incorrect.");
+        qDebug() << "Invalid camera index: " + std::to_string(this->Pimpl->CameraIndex.value()) + ". Camera may be incorrect.";
     }
     localCameraIndex = this->Pimpl->CameraIndex.value();
   }
@@ -245,9 +244,8 @@ bool vtkF3DMetaImporter::Update()
   if (localCameraIndex > 0)
   {
     // Here we know that CameraIndex has a value
-    F3DLog::Print(F3DLog::Severity::Warning,
-      "Camera index " + std::to_string(this->Pimpl->CameraIndex.value()) +
-        " is higher than the number of available camera in the files. Camera may be incorrect.");
+      qDebug() << "Camera index " + std::to_string(this->Pimpl->CameraIndex.value()) +
+        " is higher than the number of available camera in the files. Camera may be incorrect.";
   }
 
   // XXX: UpdateStatus is not set, but libf3d does not use it
@@ -572,8 +570,8 @@ void vtkF3DMetaImporter::UpdateInfoForColoring()
             datasetForColoring = genericImporter->GetImportedPoints();
           }
         }
-        this->Pimpl->ColoringInfoHandler.UpdateColoringInfo(datasetForColoring, false);
-        this->Pimpl->ColoringInfoHandler.UpdateColoringInfo(datasetForColoring, true);
+        // b this->Pimpl->ColoringInfoHandler.UpdateColoringInfo(datasetForColoring, false);
+        // b this->Pimpl->ColoringInfoHandler.UpdateColoringInfo(datasetForColoring, true);
       }
     }
     this->Pimpl->ColoringInfoTime.Modified();
@@ -615,12 +613,13 @@ std::string vtkF3DMetaImporter::GetMetaDataDescription() const
 }
 
 //----------------------------------------------------------------------------
+/* b
 F3DColoringInfoHandler& vtkF3DMetaImporter::GetColoringInfoHandler()
 {
   this->UpdateInfoForColoring();
   return this->Pimpl->ColoringInfoHandler;
 }
-
+*/
 //----------------------------------------------------------------------------
 vtkMTimeType vtkF3DMetaImporter::GetUpdateMTime()
 {

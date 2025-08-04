@@ -69,7 +69,6 @@ public:
 
 #include "factory.h"
 #include "vtkF3DGenericImporter.h"
-#include "vtkF3DMemoryMesh.h"
 #include "vtkF3DMetaImporter.h"
 
 #include <optional>
@@ -206,7 +205,7 @@ public:
         this->AnimationManager.Initialize();
 
         // Update all window options and reset camera to bounds if needed
-        this->Window.UpdateDynamicOptions();
+        // bbb this->Window.UpdateDynamicOptions();
         if (!this->Options.scene.camera.index.has_value())
         {
             this->Window.getCamera().resetToBounds();

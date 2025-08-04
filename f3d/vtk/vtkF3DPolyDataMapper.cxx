@@ -1,6 +1,6 @@
 #include "vtkF3DPolyDataMapper.h"
 
-#include "F3DLog.h"
+#include <QDebug>
 
 #include <vtkActor.h>
 #include <vtkDoubleArray.h>
@@ -177,7 +177,7 @@ void vtkF3DPolyDataMapper::ReplaceShaderValues(
       {
         std::string msg = "A mesh is associated with more than 250 bones (" +
           std::to_string(nbJoints) + "), which requires OpenGL >= 4.3";
-        F3DLog::Print(F3DLog::Severity::Warning, msg);
+          qDebug() << msg;
 
         skinningSupported = false;
       }

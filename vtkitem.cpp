@@ -47,7 +47,7 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 	vtk->_timercb->SetClientData(vtk);
 
 	vtk->_scene->Internals->AnimationManager.SetDeltaTime(1.0 / 30.0);
-	vtk->_win->UpdateDynamicOptions();
+	// bbb vtk->_win->UpdateDynamicOptions();
 	
 	_animanager = &vtk->_scene->Internals->AnimationManager;
 	return vtk;

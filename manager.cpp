@@ -141,7 +141,7 @@ void Manager::showAxis()
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
         _options->setShowAxis(!_options->showAxis());
-        vtk->_win->Internals->Renderer->ShowAxis(_options->showAxis());
+        // vtk->_win->Internals->Renderer->ShowAxis(_options->showAxis());
     });
     QThread::msleep(10);
 }

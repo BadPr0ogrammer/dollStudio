@@ -59,77 +59,25 @@ qt_add_executable(${MYNAME}
     f3d/plugin.cxx
     f3d/plugin.h
 
-    f3d/F3D/F3DColoringInfoHandler.cxx
-    f3d/F3D/F3DColoringInfoHandler.h
-    f3d/F3D/F3DLog.cxx
-    f3d/F3D/F3DLog.h
-    f3d/F3D/F3DDefaultHDRI.cxx
-    f3d/F3D/F3DDefaultHDRI.h
     f3d/F3D/F3DUtils.cxx
     f3d/F3D/F3DUtils.h
 
-    f3d/vtk/vtkF3DMetaImporter.cxx
-    f3d/vtk/vtkF3DMetaImporter.h
-    f3d/vtk/vtkF3DImporter.cxx
-    f3d/vtk/vtkF3DImporter.h
-    f3d/vtk/vtkF3DConsoleOutputWindow.cxx
-    f3d/vtk/vtkF3DConsoleOutputWindow.h
+    f3d/vtk/vtkF3DAssimpImporter.cxx
+    f3d/vtk/vtkF3DAssimpImporter.h
     f3d/vtk/vtkF3DGenericImporter.cxx
     f3d/vtk/vtkF3DGenericImporter.h
-    f3d/vtk/vtkF3DRenderer.cxx
-    f3d/vtk/vtkF3DRenderer.h
+    f3d/vtk/vtkF3DImporter.cxx
+    f3d/vtk/vtkF3DImporter.h
+    f3d/vtk/vtkF3DMetaImporter.cxx
+    f3d/vtk/vtkF3DMetaImporter.h
     f3d/vtk/vtkF3DPostProcessFilter.cxx
     f3d/vtk/vtkF3DPostProcessFilter.h
-    f3d/vtk/vtkF3DCachedLUTTexture.cxx
-    f3d/vtk/vtkF3DCachedLUTTexture.h
-    f3d/vtk/vtkF3DOpenGLGridMapper.cxx
-    f3d/vtk/vtkF3DOpenGLGridMapper.h
-    f3d/vtk/vtkF3DOverlayRenderPass.cxx
-    f3d/vtk/vtkF3DOverlayRenderPass.h
     f3d/vtk/vtkF3DPolyDataMapper.cxx
     f3d/vtk/vtkF3DPolyDataMapper.h
-    f3d/vtk/vtkF3DRenderPass.cxx
-    f3d/vtk/vtkF3DRenderPass.h
-    f3d/vtk/vtkF3DSolidBackgroundPass.cxx
-    f3d/vtk/vtkF3DSolidBackgroundPass.h
-    f3d/vtk/vtkF3DUserRenderPass.cxx
-    f3d/vtk/vtkF3DUserRenderPass.h
-    f3d/vtk/vtkF3DHexagonalBokehBlurPass.cxx
-    f3d/vtk/vtkF3DHexagonalBokehBlurPass.h
-    f3d/vtk/vtkF3DExternalRenderWindow.cxx
-    f3d/vtk/vtkF3DExternalRenderWindow.h
-    f3d/vtk/vtkF3DInteractorEventRecorder.cxx
-    f3d/vtk/vtkF3DInteractorEventRecorder.h
-    f3d/vtk/vtkF3DInteractorStyle.cxx
-    f3d/vtk/vtkF3DInteractorStyle.h
-    f3d/vtk/vtkF3DNoRenderWindow.cxx
-    f3d/vtk/vtkF3DNoRenderWindow.h
     f3d/vtk/vtkF3DWGLRenderWindow.cxx
     f3d/vtk/vtkF3DWGLRenderWindow.h
     f3d/vtk/vtkF3DObjectFactory.cxx
     f3d/vtk/vtkF3DObjectFactory.h
-    f3d/vtk/vtkF3DPointSplatMapper.cxx
-    f3d/vtk/vtkF3DPointSplatMapper.h
-    f3d/vtk/vtkF3DBitonicSort.cxx
-    f3d/vtk/vtkF3DBitonicSort.h
-    f3d/vtk/vtkF3DBitonicSortFunctions.cxx
-    f3d/vtk/vtkF3DBitonicSortFunctions.h
-    f3d/vtk/vtkF3DBitonicSortGlobalDisperseCS.cxx
-    f3d/vtk/vtkF3DBitonicSortGlobalDisperseCS.h
-    f3d/vtk/vtkF3DBitonicSortGlobalFlipCS.cxx
-    f3d/vtk/vtkF3DBitonicSortGlobalFlipCS.h
-    f3d/vtk/vtkF3DBitonicSortLocalDisperseCS.cxx
-    f3d/vtk/vtkF3DBitonicSortLocalDisperseCS.h
-    f3d/vtk/vtkF3DBitonicSortLocalSortCS.cxx
-    f3d/vtk/vtkF3DBitonicSortLocalSortCS.h
-    f3d/vtk/vtkF3DComputeDepthCS.cxx
-    f3d/vtk/vtkF3DComputeDepthCS.h
-    f3d/vtk/vtkF3DMemoryMesh.cxx
-    f3d/vtk/vtkF3DMemoryMesh.h
-    f3d/vtk/vtkF3DAssimpImporter.cxx
-    f3d/vtk/vtkF3DAssimpImporter.h
-    f3d/vtk/vtkF3DCachedSpecularTexture.cxx
-    f3d/vtk/vtkF3DCachedSpecularTexture.h
 )
 
 qt_add_qml_module(${MYNAME}

@@ -17,7 +17,6 @@
 #include <vtkProgressBarWidget.h>
 
 #include "vtkF3DMetaImporter.h"
-#include "vtkF3DRenderer.h"
 #include "vtkF3DAssimpImporter.h"
 
 #include "animationManager.h"

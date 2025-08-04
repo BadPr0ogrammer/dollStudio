@@ -6,7 +6,6 @@
 #ifndef vtkF3DMetaImporter_h
 #define vtkF3DMetaImporter_h
 
-#include "F3DColoringInfoHandler.h"
 #include "vtkF3DImporter.h"
 
 #include <vtkActor.h>
@@ -104,7 +103,7 @@ public:
    */
   std::string GetMetaDataDescription() const;
 
-  F3DColoringInfoHandler& GetColoringInfoHandler();
+  // b F3DColoringInfoHandler& GetColoringInfoHandler();
 
   ///@{
   /**
@@ -194,7 +193,6 @@ public:
 #endif
 };
 
-#include "F3DLog.h"
 #include "vtkF3DGenericImporter.h"
 
 #include <vtkActorCollection.h>
@@ -231,7 +229,7 @@ struct vtkF3DMetaImporter::Internals
     vtkTimeStamp ColoringInfoTime;
     vtkTimeStamp UpdateTime;
 
-    F3DColoringInfoHandler ColoringInfoHandler;
+    // b F3DColoringInfoHandler ColoringInfoHandler;
 
 #if VTK_VERSION_NUMBER < VTK_VERSION_CHECK(9, 3, 20240707)
     std::map<vtkImporter*, vtkSmartPointer<vtkActorCollection>> ActorsForImporterMap;

@@ -1,6 +1,6 @@
 #include "vtkF3DPostProcessFilter.h"
 
-#include "F3DLog.h"
+#include <QDebug>
 
 #include <vtkAppendPolyData.h>
 #include <vtkCompositeDataIterator.h>
@@ -65,8 +65,7 @@ int vtkF3DPostProcessFilter::RequestData(vtkInformation* vtkNotUsed(request),
         vtkSmartPointer<vtkPolyData> leafPD = vtkPolyData::SafeDownCast(leafDS);
         if (!leafDS)
         {
-          F3DLog::Print(F3DLog::Severity::Warning,
-            "A non data set block was ignored while reading a composite.");
+            qDebug() << "A non data set block was ignored while reading a composite.";
         }
         else
         {

@@ -1,5 +1,7 @@
 #include "window_impl.h"
+
 #include <QDebug>
+#include <vtkOpenGLRenderer.h>
 
 using namespace f3d;
 using namespace f3d::detail;
@@ -10,6 +12,7 @@ window_impl::window_impl(const options& options, const std::optional<Type>& type
   : Internals(std::make_unique<window_impl::internals>(options))
 {
   this->Internals->GetProcAddress = getProcAddress;
+    /* b
   if (type == Type::NONE)
   {
     this->Internals->RenWin = vtkSmartPointer<vtkF3DNoRenderWindow>::New();
@@ -18,7 +21,8 @@ window_impl::window_impl(const options& options, const std::optional<Type>& type
   {
     this->Internals->RenWin = vtkSmartPointer<vtkF3DExternalRenderWindow>::New();
   }
-  else if (type == Type::EGL)
+  else */
+  if (type == Type::EGL)
   {
 #if defined(VTK_OPENGL_HAS_EGL)
     this->Internals->RenWin = vtkSmartPointer<vtkF3DEGLRenderWindow>::New();
@@ -84,9 +88,9 @@ window_impl::window_impl(const options& options, const std::optional<Type>& type
   this->Internals->Camera = std::make_unique<detail::camera_impl>();
   this->Internals->Camera->SetVTKRenderer(this->Internals->Renderer);
 
-  this->Internals->Renderer->SetConsoleBadgeEnabled(!offscreen
+  //this->Internals->Renderer->SetConsoleBadgeEnabled(!offscreen
   // b || utils::getEnv("CTEST_F3D_CONSOLE_BADGE").has_value()
-  );
+  //);
 
   this->Initialize();
 
@@ -96,13 +100,13 @@ window_impl::window_impl(const options& options, const std::optional<Type>& type
 //----------------------------------------------------------------------------
 void window_impl::Initialize()
 {
-  this->Internals->Renderer->Initialize();
+  //this->Internals->Renderer->Initialize();
 }
 
 //----------------------------------------------------------------------------
 void window_impl::InitializeUpVector()
 {
-  this->Internals->Renderer->InitializeUpVector(this->Internals->Options.scene.up_direction);
+  //this->Internals->Renderer->InitializeUpVector(this->Internals->Options.scene.up_direction);
 }
 
 //----------------------------------------------------------------------------
@@ -260,11 +264,12 @@ window_impl::~window_impl()
   {
     // The axis widget should be disabled before calling the renderer destructor
     // As there is a register loop if not
-    this->Internals->Renderer->ShowAxis(false);
+    //  b this->Internals->Renderer->ShowAxis(false);
   }
 }
 
 //----------------------------------------------------------------------------
+/* b
 void window_impl::UpdateDynamicOptions()
 {
   vtkF3DRenderer* renderer = this->Internals->Renderer;
@@ -409,7 +414,7 @@ void window_impl::UpdateDynamicOptions()
   renderer->UpdateActors();
 
   // Update the cheatsheet if needed
-  /*
+  
   if (this->Internals->Interactor && renderer->CheatSheetNeedsUpdate())
   {
     std::vector<vtkF3DUIActor::CheatSheetGroup> cheatsheet;
@@ -428,8 +433,9 @@ void window_impl::UpdateDynamicOptions()
     }
     renderer->ConfigureCheatSheet(cheatsheet);
   }
-*/
 }
+*/
+
 /*b
 //----------------------------------------------------------------------------
 void window_impl::PrintSceneDescription(log::VerboseLevel level)
@@ -456,7 +462,7 @@ vtkRenderWindow* window_impl::GetRenderWindow()
 //----------------------------------------------------------------------------
 bool window_impl::render()
 {
-  this->UpdateDynamicOptions();
+  // bbb this->UpdateDynamicOptions();
   this->Internals->RenWin->Render();
   return true;
 }
@@ -493,7 +499,7 @@ image window_impl::renderToImage(bool noBackground)
 //----------------------------------------------------------------------------
 void window_impl::SetImporter(vtkF3DMetaImporter* importer)
 {
-  this->Internals->Renderer->SetImporter(importer);
+  // b this->Internals->Renderer->SetImporter(importer);
 }
 
 //----------------------------------------------------------------------------

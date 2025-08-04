@@ -18,6 +18,7 @@
 #include <optional>
 
 class vtkRenderWindow;
+class vtkOpenGLRenderer;
 class vtkF3DMetaImporter;
 class vtkRenderWindowInteractor;
 
@@ -85,7 +86,7 @@ public:
    * This is called automatically when calling scene::add and window::render but can also be called
    * manually when needed. Return true on success, false otherwise.
    */
-  void UpdateDynamicOptions();
+  // bbb void UpdateDynamicOptions();
 
   /**
    * Implementation only API.
@@ -138,14 +139,9 @@ public:
 #include "options.h"
 #include "utils.h"
 
-#include "vtkF3DExternalRenderWindow.h"
-
 #include "vtkF3DGenericImporter.h"
-#include "vtkF3DNoRenderWindow.h"
-#include "vtkF3DRenderer.h"
 
 #include <vtkCamera.h>
-#include <vtkF3DRenderPass.h>
 #include <vtkImageData.h>
 #include <vtkImageExport.h>
 #include <vtkInformation.h>
@@ -234,7 +230,8 @@ namespace f3d::detail
         vtkRenderWindowInteractor* Interactor = nullptr;
         
         std::unique_ptr<camera_impl> Camera;
-        vtkNew<vtkF3DRenderer> Renderer;
+        //vtkNew<vtkF3DRenderer> Renderer;
+        vtkNew<vtkOpenGLRenderer> Renderer;
         const options& Options;
         fs::path CachePath;
         context::function GetProcAddress;
