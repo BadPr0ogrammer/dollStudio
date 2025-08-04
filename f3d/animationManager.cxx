@@ -99,12 +99,12 @@ void animationManager::Initialize()
   {
     qDebug() << i << ": " << this->Importer->GetAnimationName(i);
   }
-
+  /*
   bool autoplay = this->Options.scene.animation.autoplay;
   if (autoplay)
   {
     this->StartAnimation();
-  }
+  }*/
 }
 
 //----------------------------------------------------------------------------
@@ -159,7 +159,7 @@ void animationManager::Tick()
 {
   if (this->Playing)
   {
-    this->CurrentTime += this->DeltaTime * this->Options.scene.animation.speed_factor;
+      this->CurrentTime += this->DeltaTime;// *this->Options.scene.animation.speed_factor;
 
     // Modulo computation, compute CurrentTime in the time range.
     if (this->CurrentTime < this->TimeRange[0] || this->CurrentTime > this->TimeRange[1])
@@ -252,7 +252,7 @@ void animationManager::CycleAnimation()
   {
     return;
   }
-
+  /*
   // F3D_DEPRECATED
   // Remove this in the next major release
   F3D_SILENT_WARNING_PUSH()
@@ -265,7 +265,7 @@ void animationManager::CycleAnimation()
     this->Options.scene.animation.index = 0;
   }
   F3D_SILENT_WARNING_POP()
-
+  
   // If we started with multi animation or all animations (any negative value means all animations)
   bool negative = std::any_of(this->Options.scene.animation.indices.begin(),
     this->Options.scene.animation.indices.end(), [](int idx) { return idx < 0; });
@@ -310,7 +310,7 @@ void animationManager::CycleAnimation()
 #endif
     }
   }
-
+  */
   this->PrepareForAnimationIndices();
   this->LoadAtTime(this->TimeRange[0]);
 
@@ -354,8 +354,8 @@ void animationManager::PrepareForAnimationIndices()
 {
   assert(this->Importer);
 
-  std::vector<int> animIndices = this->Options.scene.animation.indices;
-
+  std::vector<int> animIndices = { 0 };// this->Options.scene.animation.indices;
+  /*
   // F3D_DEPRECATED
   // Remove this in the next major release
   F3D_SILENT_WARNING_PUSH()
@@ -419,7 +419,7 @@ void animationManager::PrepareForAnimationIndices()
 #endif
     }
   }
-
+  */
   this->PreparedAnimationIndices = animIndices;
 
   if (this->AvailAnimations == 0)

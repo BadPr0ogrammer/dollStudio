@@ -23,6 +23,7 @@ void set(options& opt, std::string_view name, const option_variant_t& value)
   try
   {
     // clang-format off
+    /*
     if (name == "interactor.invert_zoom") opt.interactor.invert_zoom = {std::get<bool>(value)};
     else if (name == "interactor.trackball") opt.interactor.trackball = {std::get<bool>(value)};
     else if (name == "model.color.opacity") opt.model.color.opacity = {std::get<double>(value)};
@@ -50,7 +51,8 @@ void set(options& opt, std::string_view name, const option_variant_t& value)
     else if (name == "model.textures_transform") opt.model.textures_transform = f3d::transform2d_t{std::get<std::vector<double>>(value)};
     else if (name == "model.volume.enable") opt.model.volume.enable = {std::get<bool>(value)};
     else if (name == "model.volume.inverse") opt.model.volume.inverse = {std::get<bool>(value)};
-    else if (name == "render.armature.enable") opt.render.armature.enable = {std::get<bool>(value)};
+    else 
+        if (name == "render.armature.enable") opt.render.armature.enable = {std::get<bool>(value)};
     else if (name == "render.axes_grid.enable") opt.render.axes_grid.enable = {std::get<bool>(value)};
     else if (name == "render.backface_type") opt.render.backface_type = {std::get<std::string>(value)};
     else if (name == "render.background.blur.coc") opt.render.background.blur.coc = {std::get<double>(value)};
@@ -78,7 +80,8 @@ void set(options& opt, std::string_view name, const option_variant_t& value)
     else if (name == "render.raytracing.enable") opt.render.raytracing.enable = {std::get<bool>(value)};
     else if (name == "render.raytracing.samples") opt.render.raytracing.samples = {std::get<int>(value)};
     else if (name == "render.show_edges") opt.render.show_edges = {std::get<bool>(value)};
-    else if (name == "scene.animation.autoplay") opt.scene.animation.autoplay = {std::get<bool>(value)};
+    else 
+            if (name == "scene.animation.autoplay") opt.scene.animation.autoplay = {std::get<bool>(value)};
     else if (name == "scene.animation.index") opt.scene.animation.index = {std::get<int>(value)};
     else if (name == "scene.animation.indices") opt.scene.animation.indices = {std::get<std::vector<int>>(value)};
     else if (name == "scene.animation.speed_factor") opt.scene.animation.speed_factor = f3d::ratio_t{std::get<double>(value)};
@@ -86,6 +89,7 @@ void set(options& opt, std::string_view name, const option_variant_t& value)
     else if (name == "scene.camera.orthographic") opt.scene.camera.orthographic = {std::get<bool>(value)};
     else if (name == "scene.force_reader") opt.scene.force_reader = {std::get<std::string>(value)};
     else if (name == "scene.up_direction") opt.scene.up_direction = f3d::direction_t{std::get<std::vector<double>>(value)};
+    /*
     else if (name == "ui.animation_progress") opt.ui.animation_progress = {std::get<bool>(value)};
     else if (name == "ui.axis") opt.ui.axis = {std::get<bool>(value)};
     else if (name == "ui.cheatsheet") opt.ui.cheatsheet = {std::get<bool>(value)};
@@ -101,19 +105,22 @@ void set(options& opt, std::string_view name, const option_variant_t& value)
     else if (name == "ui.minimal_console") opt.ui.minimal_console = {std::get<bool>(value)};
     else if (name == "ui.scalar_bar") opt.ui.scalar_bar = {std::get<bool>(value)};
     else if (name == "ui.scale") opt.ui.scale = f3d::ratio_t{std::get<double>(value)};
+    
     // clang-format on
-    else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");
+    else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");*/
   }
   catch (const std::bad_variant_access&)
   {
     throw options::incompatible_exception(
       "Trying to set " + std::string(name) + " with incompatible type");
   }
+  /*
   catch (const f3d::type_construction_exception& ex)
   {
     throw options::incompatible_exception(
       "Could not create type for " + std::string(name) + " : " + ex.what());
   }
+  */
 }
 
 //----------------------------------------------------------------------------
@@ -125,6 +132,7 @@ option_variant_t get(const options& opt, std::string_view name)
   try
   {
     // clang-format off
+    /*
     if (name == "interactor.invert_zoom") return opt.interactor.invert_zoom;
     else if (name == "interactor.trackball") return opt.interactor.trackball;
     else if (name == "model.color.opacity") return opt.model.color.opacity.value();
@@ -152,7 +160,9 @@ option_variant_t get(const options& opt, std::string_view name)
     else if (name == "model.textures_transform") return opt.model.textures_transform.value();
     else if (name == "model.volume.enable") return opt.model.volume.enable;
     else if (name == "model.volume.inverse") return opt.model.volume.inverse;
-    else if (name == "render.armature.enable") return opt.render.armature.enable;
+    
+    else 
+        if (name == "render.armature.enable") return opt.render.armature.enable;
     else if (name == "render.axes_grid.enable") return opt.render.axes_grid.enable;
     else if (name == "render.backface_type") return opt.render.backface_type.value();
     else if (name == "render.background.blur.coc") return opt.render.background.blur.coc;
@@ -180,7 +190,8 @@ option_variant_t get(const options& opt, std::string_view name)
     else if (name == "render.raytracing.enable") return opt.render.raytracing.enable;
     else if (name == "render.raytracing.samples") return opt.render.raytracing.samples;
     else if (name == "render.show_edges") return opt.render.show_edges.value();
-    else if (name == "scene.animation.autoplay") return opt.scene.animation.autoplay;
+    else 
+            if (name == "scene.animation.autoplay") return opt.scene.animation.autoplay;
     else if (name == "scene.animation.index") return opt.scene.animation.index;
     else if (name == "scene.animation.indices") return opt.scene.animation.indices;
     else if (name == "scene.animation.speed_factor") return opt.scene.animation.speed_factor;
@@ -188,6 +199,7 @@ option_variant_t get(const options& opt, std::string_view name)
     else if (name == "scene.camera.orthographic") return opt.scene.camera.orthographic.value();
     else if (name == "scene.force_reader") return opt.scene.force_reader.value();
     else if (name == "scene.up_direction") return opt.scene.up_direction;
+        /*
     else if (name == "ui.animation_progress") return opt.ui.animation_progress;
     else if (name == "ui.axis") return opt.ui.axis;
     else if (name == "ui.cheatsheet") return opt.ui.cheatsheet;
@@ -203,8 +215,9 @@ option_variant_t get(const options& opt, std::string_view name)
     else if (name == "ui.minimal_console") return opt.ui.minimal_console;
     else if (name == "ui.scalar_bar") return opt.ui.scalar_bar;
     else if (name == "ui.scale") return opt.ui.scale;
+    
     // clang-format on
-    else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");
+    else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");*/
   }
   catch (const std::bad_optional_access&)
   {
@@ -307,6 +320,7 @@ std::vector<std::string> getNames()
 void setAsString(options& opt, std::string_view name, const std::string& str)
 {
   // clang-format off
+  /*
   if (name == "interactor.invert_zoom") opt.interactor.invert_zoom = options_tools::parse<bool>(str);
   else if (name == "interactor.trackball") opt.interactor.trackball = options_tools::parse<bool>(str);
   else if (name == "model.color.opacity") opt.model.color.opacity = options_tools::parse<double>(str);
@@ -334,7 +348,8 @@ void setAsString(options& opt, std::string_view name, const std::string& str)
   else if (name == "model.textures_transform") opt.model.textures_transform = options_tools::parse<f3d::transform2d_t>(str);
   else if (name == "model.volume.enable") opt.model.volume.enable = options_tools::parse<bool>(str);
   else if (name == "model.volume.inverse") opt.model.volume.inverse = options_tools::parse<bool>(str);
-  else if (name == "render.armature.enable") opt.render.armature.enable = options_tools::parse<bool>(str);
+  else 
+      if (name == "render.armature.enable") opt.render.armature.enable = options_tools::parse<bool>(str);
   else if (name == "render.axes_grid.enable") opt.render.axes_grid.enable = options_tools::parse<bool>(str);
   else if (name == "render.backface_type") opt.render.backface_type = options_tools::parse<std::string>(str);
   else if (name == "render.background.blur.coc") opt.render.background.blur.coc = options_tools::parse<double>(str);
@@ -362,7 +377,8 @@ void setAsString(options& opt, std::string_view name, const std::string& str)
   else if (name == "render.raytracing.enable") opt.render.raytracing.enable = options_tools::parse<bool>(str);
   else if (name == "render.raytracing.samples") opt.render.raytracing.samples = options_tools::parse<int>(str);
   else if (name == "render.show_edges") opt.render.show_edges = options_tools::parse<bool>(str);
-  else if (name == "scene.animation.autoplay") opt.scene.animation.autoplay = options_tools::parse<bool>(str);
+  else 
+          if (name == "scene.animation.autoplay") opt.scene.animation.autoplay = options_tools::parse<bool>(str);
   else if (name == "scene.animation.index") opt.scene.animation.index = options_tools::parse<int>(str);
   else if (name == "scene.animation.indices") opt.scene.animation.indices = options_tools::parse<std::vector<int>>(str);
   else if (name == "scene.animation.speed_factor") opt.scene.animation.speed_factor = options_tools::parse<f3d::ratio_t>(str);
@@ -370,6 +386,7 @@ void setAsString(options& opt, std::string_view name, const std::string& str)
   else if (name == "scene.camera.orthographic") opt.scene.camera.orthographic = options_tools::parse<bool>(str);
   else if (name == "scene.force_reader") opt.scene.force_reader = options_tools::parse<std::string>(str);
   else if (name == "scene.up_direction") opt.scene.up_direction = options_tools::parse<f3d::direction_t>(str);
+  /*
   else if (name == "ui.animation_progress") opt.ui.animation_progress = options_tools::parse<bool>(str);
   else if (name == "ui.axis") opt.ui.axis = options_tools::parse<bool>(str);
   else if (name == "ui.cheatsheet") opt.ui.cheatsheet = options_tools::parse<bool>(str);
@@ -385,8 +402,9 @@ void setAsString(options& opt, std::string_view name, const std::string& str)
   else if (name == "ui.minimal_console") opt.ui.minimal_console = options_tools::parse<bool>(str);
   else if (name == "ui.scalar_bar") opt.ui.scalar_bar = options_tools::parse<bool>(str);
   else if (name == "ui.scale") opt.ui.scale = options_tools::parse<f3d::ratio_t>(str);
+  
   // clang-format on
-  else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");
+  else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");*/
 }
 //----------------------------------------------------------------------------
 /**
@@ -397,6 +415,7 @@ std::string getAsString(const options& opt, std::string_view name)
   try
   {
     // clang-format off
+    /*
     if (name == "interactor.invert_zoom") return options_tools::format(opt.interactor.invert_zoom);
     else if (name == "interactor.trackball") return options_tools::format(opt.interactor.trackball);
     else if (name == "model.color.opacity") return options_tools::format(opt.model.color.opacity.value());
@@ -424,7 +443,8 @@ std::string getAsString(const options& opt, std::string_view name)
     else if (name == "model.textures_transform") return options_tools::format(opt.model.textures_transform.value());
     else if (name == "model.volume.enable") return options_tools::format(opt.model.volume.enable);
     else if (name == "model.volume.inverse") return options_tools::format(opt.model.volume.inverse);
-    else if (name == "render.armature.enable") return options_tools::format(opt.render.armature.enable);
+    else 
+        if (name == "render.armature.enable") return options_tools::format(opt.render.armature.enable);
     else if (name == "render.axes_grid.enable") return options_tools::format(opt.render.axes_grid.enable);
     else if (name == "render.backface_type") return options_tools::format(opt.render.backface_type.value());
     else if (name == "render.background.blur.coc") return options_tools::format(opt.render.background.blur.coc);
@@ -452,7 +472,8 @@ std::string getAsString(const options& opt, std::string_view name)
     else if (name == "render.raytracing.enable") return options_tools::format(opt.render.raytracing.enable);
     else if (name == "render.raytracing.samples") return options_tools::format(opt.render.raytracing.samples);
     else if (name == "render.show_edges") return options_tools::format(opt.render.show_edges.value());
-    else if (name == "scene.animation.autoplay") return options_tools::format(opt.scene.animation.autoplay);
+    else 
+            if (name == "scene.animation.autoplay") return options_tools::format(opt.scene.animation.autoplay);
     else if (name == "scene.animation.index") return options_tools::format(opt.scene.animation.index);
     else if (name == "scene.animation.indices") return options_tools::format(opt.scene.animation.indices);
     else if (name == "scene.animation.speed_factor") return options_tools::format(opt.scene.animation.speed_factor);
@@ -460,6 +481,7 @@ std::string getAsString(const options& opt, std::string_view name)
     else if (name == "scene.camera.orthographic") return options_tools::format(opt.scene.camera.orthographic.value());
     else if (name == "scene.force_reader") return options_tools::format(opt.scene.force_reader.value());
     else if (name == "scene.up_direction") return options_tools::format(opt.scene.up_direction);
+        /*
     else if (name == "ui.animation_progress") return options_tools::format(opt.ui.animation_progress);
     else if (name == "ui.axis") return options_tools::format(opt.ui.axis);
     else if (name == "ui.cheatsheet") return options_tools::format(opt.ui.cheatsheet);
@@ -475,8 +497,9 @@ std::string getAsString(const options& opt, std::string_view name)
     else if (name == "ui.minimal_console") return options_tools::format(opt.ui.minimal_console);
     else if (name == "ui.scalar_bar") return options_tools::format(opt.ui.scalar_bar);
     else if (name == "ui.scale") return options_tools::format(opt.ui.scale);
+    
     // clang-format on
-    else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");
+    else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");*/
   }
   catch (const std::bad_optional_access&)
   {
@@ -580,6 +603,7 @@ bool isOptional(std::string_view name)
 void reset(options& opt, std::string_view name)
 {
   // clang-format off
+  /*
   if (name == "interactor.invert_zoom") opt.interactor.invert_zoom = false;
   else if (name == "interactor.trackball") opt.interactor.trackball = false;
   else if (name == "model.color.opacity") opt.model.color.opacity.reset();
@@ -607,7 +631,8 @@ void reset(options& opt, std::string_view name)
   else if (name == "model.textures_transform") opt.model.textures_transform.reset();
   else if (name == "model.volume.enable") opt.model.volume.enable = false;
   else if (name == "model.volume.inverse") opt.model.volume.inverse = false;
-  else if (name == "render.armature.enable") opt.render.armature.enable = false;
+  else 
+      if (name == "render.armature.enable") opt.render.armature.enable = false;
   else if (name == "render.axes_grid.enable") opt.render.axes_grid.enable = false;
   else if (name == "render.backface_type") opt.render.backface_type.reset();
   else if (name == "render.background.blur.coc") opt.render.background.blur.coc = 20.0;
@@ -635,7 +660,8 @@ void reset(options& opt, std::string_view name)
   else if (name == "render.raytracing.enable") opt.render.raytracing.enable = false;
   else if (name == "render.raytracing.samples") opt.render.raytracing.samples = 5;
   else if (name == "render.show_edges") opt.render.show_edges.reset();
-  else if (name == "scene.animation.autoplay") opt.scene.animation.autoplay = false;
+  else 
+              if (name == "scene.animation.autoplay") opt.scene.animation.autoplay = false;
   else if (name == "scene.animation.index") opt.scene.animation.index = 0;
   else if (name == "scene.animation.indices") opt.scene.animation.indices = {0};
   else if (name == "scene.animation.speed_factor") opt.scene.animation.speed_factor = f3d::ratio_t{1.0};
@@ -643,6 +669,7 @@ void reset(options& opt, std::string_view name)
   else if (name == "scene.camera.orthographic") opt.scene.camera.orthographic.reset();
   else if (name == "scene.force_reader") opt.scene.force_reader.reset();
   else if (name == "scene.up_direction") opt.scene.up_direction = f3d::direction_t{0,1,0};
+      /*
   else if (name == "ui.animation_progress") opt.ui.animation_progress = false;
   else if (name == "ui.axis") opt.ui.axis = false;
   else if (name == "ui.cheatsheet") opt.ui.cheatsheet = false;
@@ -658,8 +685,9 @@ void reset(options& opt, std::string_view name)
   else if (name == "ui.minimal_console") opt.ui.minimal_console = false;
   else if (name == "ui.scalar_bar") opt.ui.scalar_bar = false;
   else if (name == "ui.scale") opt.ui.scale = f3d::ratio_t{1.0};
+  
   // clang-format on
-  else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");
+  else throw options::inexistent_exception("Option " + std::string(name) + " does not exist");*/
 }
 
 } // options_generated

@@ -13,7 +13,7 @@ vtkStandardNewMacro(VtkItem::Data)
 
 void VtkItem::setupOpt()
 {
-	_options.render.grid.enable = false;
+	//_options.render.grid.enable = false;
 }
 
 void VtkItem::timerCall()

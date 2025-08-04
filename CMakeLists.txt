@@ -59,9 +59,6 @@ qt_add_executable(${MYNAME}
     f3d/plugin.cxx
     f3d/plugin.h
 
-    f3d/F3D/F3DUtils.cxx
-    f3d/F3D/F3DUtils.h
-
     f3d/vtk/vtkF3DAssimpImporter.cxx
     f3d/vtk/vtkF3DAssimpImporter.h
     f3d/vtk/vtkF3DGenericImporter.cxx

@@ -163,19 +163,20 @@ public:
         {
             // b this->Interactor->ResetTemporaryUp();
         }
-
+        /*
         if (this->Options.scene.camera.index.has_value())
         {
             this->MetaImporter->SetCameraIndex(this->Options.scene.camera.index.value());
         }
-
+        */
         // Manage progress bar
         vtkNew<vtkProgressBarWidget> progressWidget;
         vtkNew<vtkTimerLog> timer;
         scene_impl::internals::ProgressDataStruct callbackData;
         callbackData.timer = timer;
         callbackData.widget = progressWidget;
-        if (this->Options.ui.loader_progress && this->Interactor)
+        if (//this->Options.ui.loader_progress && 
+            this->Interactor)
         {
             scene_impl::internals::CreateProgressRepresentationAndCallback(
                 &callbackData, this->MetaImporter, this->Interactor);
@@ -206,11 +207,12 @@ public:
 
         // Update all window options and reset camera to bounds if needed
         // bbb this->Window.UpdateDynamicOptions();
+        /*
         if (!this->Options.scene.camera.index.has_value())
         {
             this->Window.getCamera().resetToBounds();
         }
-
+        */
         // b scene_impl::internals::DisplayAllInfo(this->MetaImporter, this->Window);
     }
 /* b

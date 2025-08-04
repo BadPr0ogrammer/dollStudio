@@ -192,6 +192,7 @@ public:
    * The complete generated options struct
    */
   // clang-format off
+  /*
     struct interactor {
     bool invert_zoom = false;
     bool trackball = false;
@@ -212,7 +213,7 @@ public:
     struct matcap {
       std::optional<std::filesystem::path> texture;
     } matcap;
-
+    
     struct material {
       std::optional<double> base_ior;
       std::optional<double> metallic;
@@ -248,7 +249,7 @@ public:
     } volume;
 
   } model;
-
+  
   struct render {
     struct armature {
       bool enable = false;
@@ -281,7 +282,7 @@ public:
       bool tone_mapping = false;
       bool translucency_support = false;
     } effect;
-
+    
     struct grid {
       bool absolute = false;
       f3d::color_t color = f3d::color_t{0.0, 0.0, 0.0};
@@ -309,7 +310,7 @@ public:
 
     std::optional<bool> show_edges;
   } render;
-
+  
   struct scene {
     struct animation {
       bool autoplay = false;
@@ -326,7 +327,7 @@ public:
     std::optional<std::string> force_reader;
     f3d::direction_t up_direction = f3d::direction_t{0,1,0};
   } scene;
-
+  
   struct ui {
     bool animation_progress = false;
     bool axis = false;
@@ -344,8 +345,7 @@ public:
     bool scalar_bar = false;
     f3d::ratio_t scale = f3d::ratio_t{1.0};
   } ui;
-
-
+  */
   // clang-format on
 };
 

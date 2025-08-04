@@ -55,7 +55,7 @@ scene& scene_impl::add(const std::vector<fs::path>& filePaths)
     {
       throw scene::load_failure_exception(filePath.string() + " does not exists");
     }
-    std::optional<std::string> forceReader = this->Internals->Options.scene.force_reader;
+    std::optional<std::string> forceReader;// = this->Internals->Options.scene.force_reader;
     // Recover the importer for the provided file path
     f3d::reader* reader = f3d::factory::instance()->getReader(filePath.string(), forceReader);
     if (reader)
@@ -151,8 +151,9 @@ scene& scene_impl::clear()
 //----------------------------------------------------------------------------
 bool scene_impl::supports(const fs::path& filePath)
 {
+    std::optional<std::string> force_reader;
   return f3d::factory::instance()->getReader(
-           filePath.string(), this->Internals->Options.scene.force_reader) != nullptr;
+           filePath.string(), /*this->Internals->Options.scene.*/force_reader) != nullptr;
 }
 
 //----------------------------------------------------------------------------

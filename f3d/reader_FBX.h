@@ -7,7 +7,7 @@
 
 #include "reader.h"
 
-#include "F3DUtils.h"
+//#include "F3DUtils.h"
 
 #if 0
 #include <.h>
