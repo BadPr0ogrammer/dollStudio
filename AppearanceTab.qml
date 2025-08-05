@@ -9,12 +9,14 @@ import "."
 ColumnLayout {
 
     function applyChangesToSettings() {
-        options.showAxis = showAxisBox.checked
-        options.storeIt();
+        settings.showAxis = showAxisBox.checked
+        settings.showGrid = showGridBox.checked
+        settings.storeIt();
     }
 
     function revertToOldSettings() {
-        showAxisBox.checked = options.showAxis
+        showAxisBox.checked = settings.showAxis
+        showGridBox.checked = settings.showGrid
     }
 
     Item {
@@ -39,10 +41,17 @@ ColumnLayout {
             }
             CheckBox {
                 id: showAxisBox
-                checked: options.showAxis
+                checked: settings.showAxis
                 leftPadding: 0
             }
-
+            Label {
+                text: qsTr("Show grid")
+            }
+            CheckBox {
+                id: showGridBox
+                checked: settings.showGrid
+                leftPadding: 0
+            }
         }
     }
 }

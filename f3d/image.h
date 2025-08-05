@@ -2,7 +2,6 @@
 #define f3d_image_h
 
 #include "exception.h"
-#include "export.h"
 
 #include <filesystem>
 #include <string>

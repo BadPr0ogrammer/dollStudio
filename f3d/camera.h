@@ -1,7 +1,6 @@
 #ifndef f3d_camera_h
 #define f3d_camera_h
 
-#include "export.h"
 #include "types.h"
 
 #include <array>

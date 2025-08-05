@@ -50,10 +50,6 @@ qt_add_executable(${MYNAME}
     f3d/context.h
     f3d/factory.cxx
     f3d/factory.h
-    f3d/utils.cxx
-    f3d/utils.h
-    f3d/levenshtein.cxx
-    f3d/levenshtein.h
     f3d/plugin.cxx
     f3d/plugin.h
 

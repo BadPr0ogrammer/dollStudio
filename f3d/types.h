@@ -2,7 +2,6 @@
 #define f3d_types_h
 
 #include "exception.h"
-#include "export.h"
 
 #include <algorithm>
 #include <array>

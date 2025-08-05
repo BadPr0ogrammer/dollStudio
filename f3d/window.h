@@ -2,7 +2,6 @@
 #define f3d_window_h
 
 #include "camera.h"
-#include "export.h"
 #include "image.h"
 
 #include <string>
@@ -16,7 +15,7 @@ namespace f3d
  * A class to render things in a window or an image.
  * An icon and windowName can be set which can be shown by a window manager.
  */
-class /*F3D_EXPORT*/ window
+class window
 {
 public:
   /**

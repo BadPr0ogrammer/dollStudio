@@ -21,6 +21,10 @@ class vtkRenderWindow;
 class vtkOpenGLRenderer;
 class vtkF3DMetaImporter;
 class vtkRenderWindowInteractor;
+class vtkOrientationMarkerWidget;
+class vtkBoundingBox;
+class vtkMatrix4x4;
+class vtkGridAxesActor3D;
 
 namespace DS {
 class Settings;
@@ -37,7 +41,7 @@ public:
    * Create the internal vtkRenderWindow using the offscreen param
    * and store option ref for later usage
    */
-  window_impl(const DS::Settings* psettings, const std::optional<Type>& type, bool offscreen,
+  window_impl(DS::Settings* psettings, const std::optional<Type>& type, bool offscreen,
     const context::function& getProcAddress, vtkRenderWindow *vtkwindow);
   /**
    * Default destructor
@@ -127,6 +131,10 @@ public:
    */
   void RenderUIOnly();
 
+  void ShowAxis(bool show);
+  bool ShowGrid(bool show);
+  vtkBoundingBox ComputeVisiblePropOrientedBounds(const vtkMatrix4x4* matrix);
+
 // b private:
   class internals;
   std::unique_ptr<internals> Internals;
@@ -137,7 +145,6 @@ public:
 
 #include "camera_impl.h"
 #include "macros.h"
-#include "utils.h"
 
 #include "vtkF3DGenericImporter.h"
 
@@ -151,6 +158,14 @@ public:
 #include <vtkRenderingOpenGLConfigure.h>
 #include <vtkVersion.h>
 #include <vtkWindowToImageFilter.h>
+#include <vtkOpenGLRenderer.h>
+#include <vtkOrientationMarkerWidget.h>
+#include <vtkAxesActor.h>
+#include <vtkMatrix4x4.h>
+#include <vtkTransform.h>
+#include <vtkBoundingBox.h>
+#include <vtkPolyData.h>
+#include <vtkGridAxesActor3D.h>
 
 #ifdef VTK_USE_X
 #include <vtkF3DGLXRenderWindow.h>
@@ -179,7 +194,7 @@ namespace f3d::detail
     class window_impl::internals
     {
     public:
-        explicit internals(const DS::Settings* psettings)
+        explicit internals(DS::Settings* psettings)
             : settings(psettings)
         {
         }
@@ -233,9 +248,12 @@ namespace f3d::detail
         std::unique_ptr<camera_impl> Camera;
         //vtkNew<vtkF3DRenderer> Renderer;
         vtkNew<vtkOpenGLRenderer> Renderer;
-        const DS::Settings* settings = nullptr;
+        DS::Settings* settings = nullptr;
         fs::path CachePath;
         context::function GetProcAddress;
+
+        vtkSmartPointer<vtkOrientationMarkerWidget> AxisWidget;
+        vtkNew<vtkGridAxesActor3D> GridAxesActor;
     };
 }
 

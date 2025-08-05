@@ -131,6 +131,17 @@ ApplicationWindow {
             }
         }
         Menu {
+            title: qsTr("&View")
+            Action {
+                text: qsTr("&Axis")
+                onTriggered: projectManager.showAxis()
+            }
+            Action {
+                text: qsTr("&Grid")
+                onTriggered: projectManager.showGrid()
+            }
+        }
+        Menu {
             title: qsTr("&Help")
             Action {
                 text: qsTr("&About")

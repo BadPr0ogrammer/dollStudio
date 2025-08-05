@@ -2,7 +2,6 @@
 #define f3d_context_h
 
 #include "exception.h"
-#include "export.h"
 
 #include <functional>
 #include <string>
@@ -19,7 +18,7 @@ namespace f3d
  * can be used as argument of this factory.
  * One can also create a custom functor returning a `f3d::context::function`.
  */
-class /*F3D_EXPORT*/ context
+class context
 {
 public:
   using fptr = void (*)();

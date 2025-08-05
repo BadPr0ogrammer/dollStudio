@@ -1,13 +1,15 @@
 #include "scene_impl.h"
 #include <QDebug>
 
+#include "settings.h"
+
 namespace fs = std::filesystem;
 
 namespace f3d::detail
 {
 
 //----------------------------------------------------------------------------
-scene_impl::scene_impl(const DS::Settings* psettings, window_impl& window)
+scene_impl::scene_impl(DS::Settings* psettings, window_impl& window)
   : Internals(std::make_unique<scene_impl::internals>(psettings, window))
 {
 }
@@ -189,4 +191,5 @@ void scene_impl::PrintImporterDescription(log::VerboseLevel level)
 {
   scene_impl::internals::DisplayImporterDescription(level, this->Internals->MetaImporter);
 }*/
+
 }

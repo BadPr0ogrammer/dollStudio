@@ -2,7 +2,6 @@
 #define f3d_scene_h
 
 #include "exception.h"
-#include "export.h"
 #include "types.h"
 
 #include <filesystem>

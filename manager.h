@@ -52,6 +52,7 @@ public:
     Q_INVOKABLE void closeSource();
     Q_INVOKABLE void cameraReset();
     Q_INVOKABLE void showAxis();
+	Q_INVOKABLE void showGrid();
 signals:	
 	void sliderValChanged();
     void treeModelChanged();

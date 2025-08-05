@@ -32,7 +32,7 @@ public:
   /**
    * Documented public API
    */
-  scene_impl(const DS::Settings* psettings, window_impl& window);
+  scene_impl(DS::Settings* psettings, window_impl& window);
   ~scene_impl();
   scene& add(const std::filesystem::path& filePath) override;
   scene& add(const std::vector<std::filesystem::path>& filePath) override;
@@ -93,7 +93,7 @@ namespace detail
 class scene_impl::internals
 {
 public:
-    internals(const DS::Settings* psettings, window_impl& window)
+    internals(DS::Settings* psettings, window_impl& window)
         : settings(psettings)
         , Window(window)
         , AnimationManager(psettings, window)
@@ -251,12 +251,11 @@ public:
         window.PrintSceneDescription(log::VerboseLevel::DEBUG);
     }
 */
-    const DS::Settings* settings = nullptr;
+    DS::Settings* settings = nullptr;
     window_impl& Window;
     //interactor_impl* Interactor = nullptr;
     vtkRenderWindowInteractor* Interactor = nullptr;
     animationManager AnimationManager;
-
     vtkNew<vtkF3DMetaImporter> MetaImporter;
 };
 }

@@ -140,10 +140,19 @@ void Manager::showAxis()
 {
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-        //_options->setShowAxis(!_options->showAxis());
-        // vtk->_win->Internals->Renderer->ShowAxis(_options->showAxis());
+         vtk->_win->ShowAxis(!_settings->showAxis());
     });
     QThread::msleep(10);
+}
+
+void Manager::showGrid()
+{
+	_vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
+		VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
+		_settings->setShowGrid(!_settings->showGrid());
+		vtk->_win->ShowGrid(_settings->showGrid());
+		});
+	QThread::msleep(10);
 }
 
 }
