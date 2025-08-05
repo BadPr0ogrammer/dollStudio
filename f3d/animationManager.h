@@ -33,7 +33,7 @@ class window_impl;
 class animationManager
 {
 public:
-  animationManager(const DS::Settings* psettings, window_impl& window);
+  animationManager(const DS::Settings* psettings, window_impl* window);
   ~animationManager() = default;
 
   /**
@@ -120,10 +120,9 @@ public:
   void PrepareForAnimationIndices();
 
   const DS::Settings* settings = nullptr;
-  window_impl& Window;
+  window_impl* Window = nullptr;
   vtkImporter* Importer = nullptr;
   // b interactor_impl* Interactor = nullptr;
-  vtkRenderWindowInteractor* Interactor = nullptr;
 
   int AvailAnimations = 0;
 

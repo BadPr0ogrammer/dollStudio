@@ -7,6 +7,8 @@
 #include <vtkDataAssembly.h>
 #include <vtkProgressBarRepresentation.h>
 
+#include "camera_impl.h"
+
 namespace DS
 {
 vtkStandardNewMacro(VtkItem::Data)
@@ -30,26 +32,25 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 	vtkNew<Data> vtk;
 	vtk->_vtkItem = this;
 
-	vtk->_win = new f3d::detail::window_impl(_manager->_settings, f3d::window::Type::WGL, false, nullptr, renderWindow);
-	vtk->_win->SetInteractor(renderWindow->GetInteractor());
-	vtk->_scene = new f3d::detail::scene_impl(_manager->_settings, *vtk->_win);
-	vtk->_scene->SetInteractor(renderWindow->GetInteractor());
+	vtk->_win = new f3d::detail::window_impl(_manager->_settings, renderWindow);
+	vtk->_scene = new f3d::detail::scene_impl(_manager->_settings, vtk->_win);
 
 	vtk->_timercb = vtkSmartPointer<vtkCallbackCommand>::New();
-	vtk->_win->Internals->Interactor->CreateRepeatingTimer(10);
+	vtk->_win->RenWin->GetInteractor()->CreateRepeatingTimer(10);
 	vtk->_timercb->SetCallback([](vtkObject*, unsigned long, void* clientData, void*) {
 		Data* vtk = static_cast<Data*>(clientData);
-		if (vtk->_scene->Internals->AnimationManager.IsPlaying()) {
-			vtk->_scene->Internals->AnimationManager.Tick();
+		if (vtk->_scene->AnimationManager->IsPlaying()) {
+			vtk->_scene->AnimationManager->Tick();
 		}
 		});
-	vtk->_win->Internals->Interactor->AddObserver(vtkCommand::TimerEvent, vtk->_timercb);
+	vtk->_win->RenWin->GetInteractor()->AddObserver(vtkCommand::TimerEvent, vtk->_timercb);
 	vtk->_timercb->SetClientData(vtk);
 
-	vtk->_scene->Internals->AnimationManager.SetDeltaTime(1.0 / 30.0);
-	// bbb vtk->_win->UpdateDynamicOptions();
-	
-	_animanager = &vtk->_scene->Internals->AnimationManager;
+	vtk->_scene->AnimationManager->SetDeltaTime(1.0 / 30.0);
+	_animanager = vtk->_scene->AnimationManager;
+
+	vtk->_win->UpdateDynamicOptions(true);
+
 	return vtk;
 }
 
@@ -80,8 +81,8 @@ bool VtkItem::openSource(bool clear)
 			if (clear)
 				vtk->_scene->clear();
 			vtk->_scene->add(vtk->_vtkItem->_fname.toStdString());
-			vtk->_win->getCamera().resetToBounds();
-			ret = vtk->_win->render();
+			vtk->_win->Camera->resetToBounds();
+			vtk->_win->UpdateDynamicOptions(true);
 
 			setTreeView(vtk, clear);
 		}
@@ -94,7 +95,7 @@ bool VtkItem::openSource(bool clear)
 void VtkItem::setTreeView(Data* vtk, bool clear)
 {
 	vtkF3DAssimpImporter* importer = reinterpret_cast<vtkF3DAssimpImporter*>(
-		vtk->_scene->Internals->MetaImporter->Pimpl->Importers[0].Importer.Get());
+		vtk->_scene->MetaImporter->Pimpl->Importers[0].Importer.Get());
 	_aiscene = importer->Internals->Scene;
 
 	_manager->setTreeModel(importer, clear);

@@ -7,6 +7,8 @@
 #include "manager.h"
 #include "settings.h"
 
+#include "camera_impl.h"
+
 #include "assimp/mesh.h"
 
 namespace DS
@@ -131,26 +133,25 @@ void Manager::cameraReset()
 {
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-        vtk->_win->getCamera().resetToBounds();
+        vtk->_win->Camera->resetToBounds();
     });
     QThread::msleep(10);
 }
 
-void Manager::showAxis()
+void Manager::toggleShowAxis()
 {
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-         vtk->_win->ShowAxis(!_settings->showAxis());
+         vtk->_win->ShowAxes(!_settings->showAxes(), true);
     });
     QThread::msleep(10);
 }
 
-void Manager::showGrid()
+void Manager::toggleShowGrid()
 {
 	_vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
 		VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-		_settings->setShowGrid(!_settings->showGrid());
-		vtk->_win->ShowGrid(_settings->showGrid());
+		vtk->_win->ShowGrid(!_settings->showGrid(), true);
 		});
 	QThread::msleep(10);
 }

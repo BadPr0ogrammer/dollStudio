@@ -19,31 +19,21 @@
 
 namespace f3d::detail
 {
-//----------------------------------------------------------------------------
-animationManager::animationManager(const DS::Settings* psettings, window_impl& window)
+animationManager::animationManager(const DS::Settings* psettings, window_impl* window)
   : settings(psettings), Window(window)
 {
 }
 
-//----------------------------------------------------------------------------
 void animationManager::SetImporter(vtkImporter* importer)
 {
   this->Importer = importer;
 }
 
-//----------------------------------------------------------------------------
-void animationManager::SetInteractor(vtkRenderWindowInteractor* interactor)//interactor_impl*
-{
-  this->Interactor = interactor;
-}
-
-//----------------------------------------------------------------------------
 void animationManager::SetDeltaTime(double deltaTime)
 {
   this->DeltaTime = deltaTime;
 }
 
-//----------------------------------------------------------------------------
 void animationManager::Initialize()
 {
   assert(this->Importer);
@@ -105,7 +95,6 @@ void animationManager::Initialize()
   }*/
 }
 
-//----------------------------------------------------------------------------
 void animationManager::StartAnimation()
 {
   if (!this->IsPlaying())
@@ -114,7 +103,6 @@ void animationManager::StartAnimation()
   }
 }
 
-//----------------------------------------------------------------------------
 void animationManager::StopAnimation()
 {
   if (this->IsPlaying())
@@ -123,11 +111,10 @@ void animationManager::StopAnimation()
   }
 }
 
-//----------------------------------------------------------------------------
 void animationManager::ToggleAnimation()
 {
   this->PrepareForAnimationIndices();
-  if (!this->PreparedAnimationIndices.value().empty() && this->Interactor)
+  if (!this->PreparedAnimationIndices.value().empty())
   {
     this->Playing = !this->Playing;
 
@@ -152,7 +139,6 @@ void animationManager::ToggleAnimation()
   }
 }
 
-//----------------------------------------------------------------------------
 void animationManager::Tick()
 {
   if (this->Playing)
@@ -173,12 +159,11 @@ void animationManager::Tick()
 
     if (this->LoadAtTime(this->CurrentTime))
     {
-      this->Window.render();
+      //this->Window.render();
     }
   }
 }
 
-//----------------------------------------------------------------------------
 bool animationManager::LoadAtTime(double timeValue)
 {
   assert(this->Importer);
@@ -242,7 +227,6 @@ bool animationManager::LoadAtTime(double timeValue)
   return true;
 }
 
-// ---------------------------------------------------------------------------------
 void animationManager::CycleAnimation()
 {
   assert(this->Importer);
@@ -311,13 +295,8 @@ void animationManager::CycleAnimation()
   */
   this->PrepareForAnimationIndices();
   this->LoadAtTime(this->TimeRange[0]);
-
-  vtkRenderWindow* renWin = this->Window.GetRenderWindow();
-  // b vtkF3DRenderer* ren = vtkF3DRenderer::SafeDownCast(renWin->GetRenderers()->GetFirstRenderer());
-  // b ren->SetCheatSheetConfigured(false);
 }
 
-// ---------------------------------------------------------------------------------
 std::string animationManager::GetAnimationName()
 {
   assert(this->Importer);
@@ -347,7 +326,6 @@ std::string animationManager::GetAnimationName()
   return this->Importer->GetAnimationName(this->PreparedAnimationIndices.value()[0]);
 }
 
-//----------------------------------------------------------------------------
 void animationManager::PrepareForAnimationIndices()
 {
   assert(this->Importer);
@@ -480,7 +458,6 @@ void animationManager::PrepareForAnimationIndices()
   }
 }
 
-//----------------------------------------------------------------------------
 std::pair<double, double> animationManager::GetTimeRange()
 {
   // Make sure TimeRange is updated
@@ -490,10 +467,10 @@ std::pair<double, double> animationManager::GetTimeRange()
   return std::make_pair(this->TimeRange[0], this->TimeRange[1]);
 }
 
-//----------------------------------------------------------------------------
 unsigned int animationManager::GetNumberOfAvailableAnimations() const
 {
   assert(this->AvailAnimations >= 0);
   return static_cast<unsigned int>(this->AvailAnimations);
 }
+
 }

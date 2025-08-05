@@ -1,195 +1,192 @@
 #include "scene_impl.h"
-#include <QDebug>
+
+#include "animationManager.h"
+#include "window_impl.h"
+#include "factory.h"
+
+#include "vtkF3DGenericImporter.h"
+#include "vtkF3DMetaImporter.h"
+
+#include <vtkCallbackCommand.h>
+#include <vtkProgressBarRepresentation.h>
+#include <vtkProgressBarWidget.h>
+#include <vtkTimerLog.h>
+#include <vtkVersion.h>
+#include <vtksys/SystemTools.hxx>
+
+#include <vtkRenderWindowInteractor.h>
+
+#include <vector>
 
 #include "settings.h"
 
+#include <QDebug>
+
 namespace fs = std::filesystem;
+using namespace f3d::detail;
 
-namespace f3d::detail
+scene_impl::scene_impl(DS::Settings* psettings, window_impl* window)
+	: settings(psettings), Window(window)
 {
-
-//----------------------------------------------------------------------------
-scene_impl::scene_impl(DS::Settings* psettings, window_impl& window)
-  : Internals(std::make_unique<scene_impl::internals>(psettings, window))
-{
+	AnimationManager = new animationManager(psettings, window);
+	this->MetaImporter->SetRenderWindow(this->Window->RenWin);
+	AnimationManager->SetImporter(MetaImporter);
 }
 
-//----------------------------------------------------------------------------
-scene_impl::~scene_impl() = default;
-
-//----------------------------------------------------------------------------
-scene& scene_impl::add(const fs::path& filePath)
+scene_impl::~scene_impl()
 {
-  std::vector<fs::path> paths = { filePath };
-  return this->add(paths);
+	delete AnimationManager;
 }
 
-//----------------------------------------------------------------------------
-scene& scene_impl::add(const std::vector<std::string>& filePathStrings)
+void scene_impl::add(const fs::path& filePath)
 {
-  std::vector<fs::path> paths;
-  paths.reserve(filePathStrings.size());
-  for (const std::string& str : filePathStrings)
-  {
-    paths.emplace_back(str);
-  }
-  return this->add(paths);
+	std::vector<fs::path> paths = { filePath };
+	this->add(paths);
 }
 
-//----------------------------------------------------------------------------
-scene& scene_impl::add(const std::vector<fs::path>& filePaths)
+void scene_impl::add(const std::vector<fs::path>& filePaths)
 {
-  if (filePaths.empty())
-  {
-    qDebug() << "No file to load a full scene provided\n";
-    return *this;
-  }
+	if (filePaths.empty()) {
+		qDebug() << "No file to load a full scene provided\n";
+		return;
+	}
 
-  std::vector<vtkSmartPointer<vtkImporter>> importers;
-  for (const fs::path& filePath : filePaths)
-  {
-    if (filePath.empty())
-    {
-      qDebug() << "An empty file to load was provided\n";
-      continue;
-    }
-    if (!vtksys::SystemTools::FileExists(filePath.string(), true))
-    {
-      throw scene::load_failure_exception(filePath.string() + " does not exists");
-    }
-    std::optional<std::string> forceReader;// = this->Internals->Options.scene.force_reader;
-    // Recover the importer for the provided file path
-    f3d::reader* reader = f3d::factory::instance()->getReader(filePath.string(), forceReader);
-    if (reader)
-    {
-      if (forceReader)
-      {
-        qDebug() << "Forcing reader " << (*forceReader) << " for " << filePath.string();
-      }
-      else
-      {
-        qDebug() << "Found a reader for \"" << filePath.string() << "\" : \"" << reader->getName() << "\"";
-      }
-    }
-    else
-    {
-      if (forceReader)
-      {
-        throw scene::load_failure_exception(*forceReader + " is not a valid force reader");
-      }
-      throw scene::load_failure_exception(
-        filePath.string() + " is not a file of a supported 3D scene file format");
-    }
+	std::vector<vtkSmartPointer<vtkImporter>> importers;
+	for (const fs::path& filePath : filePaths)
+	{
+		if (filePath.empty()) {
+			qDebug() << "An empty file to load was provided\n";
+			continue;
+		}
+		if (!vtksys::SystemTools::FileExists(filePath.string(), true)) {
+			qDebug() << filePath.string() + " does not exists";
+			return;
+		}
+		std::optional<std::string> forceReader;// = this->Internals->Options.scene.force_reader;
+		// Recover the importer for the provided file path
+		f3d::reader* reader = f3d::factory::instance()->getReader(filePath.string(), forceReader);
+		if (!reader) {
+			qDebug() << "Unable to reader.";
+			return;
+		}
 
-    vtkSmartPointer<vtkImporter> importer = reader->createSceneReader(filePath.string());
-    if (!importer)
-    {
-      // XXX: F3D Plugin CMake logic ensure there is either a scene reader or a geometry reader
-      auto vtkReader = reader->createGeometryReader(filePath.string());
-      assert(vtkReader);
-      vtkSmartPointer<vtkF3DGenericImporter> genericImporter =
-        vtkSmartPointer<vtkF3DGenericImporter>::New();
-      genericImporter->SetInternalReader(vtkReader);
-      importer = genericImporter;
-    }
-    importers.emplace_back(importer);
-  }
+		vtkSmartPointer<vtkImporter> importer = reader->createSceneReader(filePath.string());
+		if (!importer) {
+			// XXX: F3D Plugin CMake logic ensure there is either a scene reader or a geometry reader
+			auto vtkReader = reader->createGeometryReader(filePath.string());
+			assert(vtkReader);
+			vtkSmartPointer<vtkF3DGenericImporter> genericImporter =
+				vtkSmartPointer<vtkF3DGenericImporter>::New();
+			genericImporter->SetInternalReader(vtkReader);
+			importer = genericImporter;
+		}
+		importers.emplace_back(importer);
+	}
 
-  qDebug() << "\nLoading files: ";
-  if (filePaths.size() == 1)
-  {
-    qDebug() << filePaths[0].string();
-  }
-  else
-  {
-    for (const fs::path& filePathStr : filePaths)
-    {
-      qDebug() << "- " << filePathStr.string();
-    }
-  }
+	qDebug() << "\nLoading files: ";
+	if (filePaths.size() == 1)
+		qDebug() << filePaths[0].string();
+	else for (const fs::path& filePathStr : filePaths)
+		qDebug() << "- " << filePathStr.string();
 
-  this->Internals->Load(importers);
-  return *this;
+	this->Load(importers);
 }
 
-//----------------------------------------------------------------------------
-scene& scene_impl::add(const mesh_t& mesh)
+void scene_impl::clear()
 {
-  // sanity checks
-  /* b
-  auto [valid, err] = mesh.isValid();
-  if (!valid)
-  {
-    throw scene::load_failure_exception(err);
-  }
-
-  vtkNew<vtkF3DMemoryMesh> vtkSource;
-  vtkSource->SetPoints(mesh.points);
-  vtkSource->SetNormals(mesh.normals);
-  vtkSource->SetTCoords(mesh.texture_coordinates);
-  vtkSource->SetFaces(mesh.face_sides, mesh.face_indices);
-
-  vtkSmartPointer<vtkF3DGenericImporter> importer = vtkSmartPointer<vtkF3DGenericImporter>::New();
-  importer->SetInternalReader(vtkSource);
-
-  log::debug("Loading 3D scene from memory");
-  this->Internals->Load({ importer });
-  */
-  return *this;
+	// Clear the meta importer from all importers
+	this->MetaImporter->Clear();
+	// Clear the window of all actors
+	this->Window->Initialize();
 }
 
-//----------------------------------------------------------------------------
-scene& scene_impl::clear()
-{
-  // Clear the meta importer from all importers
-  this->Internals->MetaImporter->Clear();
-
-  // Clear the window of all actors
-  this->Internals->Window.Initialize();
-
-  return *this;
-}
-
-//----------------------------------------------------------------------------
 bool scene_impl::supports(const fs::path& filePath)
 {
-    std::optional<std::string> force_reader;
-  return f3d::factory::instance()->getReader(
-           filePath.string(), /*this->Internals->Options.scene.*/force_reader) != nullptr;
+	std::optional<std::string> force_reader;
+	return f3d::factory::instance()->getReader(
+		filePath.string(), /*this->Internals->Options.scene.*/force_reader) != nullptr;
 }
 
-//----------------------------------------------------------------------------
-scene& scene_impl::loadAnimationTime(double timeValue)
+void scene_impl::Load(const std::vector<vtkSmartPointer<vtkImporter>>& importers)
 {
-  this->Internals->AnimationManager.LoadAtTime(timeValue);
-  //b scene_impl::internals::DisplayAllInfo(this->Internals->MetaImporter, this->Internals->Window);
-  return *this;
+	for (const vtkSmartPointer<vtkImporter>& importer : importers)
+		this->MetaImporter->AddImporter(importer);
+
+	//// this->Window.InitializeUpVector();
+
+	// Update the meta importer, the will only update importers that have not been updated before
+	if (!this->MetaImporter->Update()) {
+		this->MetaImporter->Clear();
+		this->Window->Initialize();
+	}
+	// Initialize the animation using temporal information from the importer
+	this->AnimationManager->Initialize();
 }
 
-//----------------------------------------------------------------------------
-std::pair<double, double> scene_impl::animationTimeRange()
+#if 0
+namespace f3d
 {
-  return this->Internals->AnimationManager.GetTimeRange();
-}
+namespace detail
+{
+class scene_impl::internals
+{
+public:
+	internals(DS::Settings* psettings, window_impl& window)
+		: settings(psettings)
+		, Window(window)
+		, AnimationManager(psettings, window)
+	{
+		this->MetaImporter->SetRenderWindow(this->Window.RenWin);
+		//this->Window.SetImporter(this->MetaImporter);
+		this->AnimationManager.SetImporter(this->MetaImporter);
+	}
 
-//----------------------------------------------------------------------------
-unsigned int scene_impl::availableAnimations() const
-{
-  return this->Internals->AnimationManager.GetNumberOfAvailableAnimations();
-}
+	struct ProgressDataStruct
+	{
+		vtkTimerLog* timer;
+		vtkProgressBarWidget* widget;
+	};
 
-//----------------------------------------------------------------------------
-//void scene_impl::SetInteractor(interactor_impl* interactor)
-void scene_impl::SetInteractor(vtkRenderWindowInteractor* interactor)
-{
-  this->Internals->Interactor = interactor;
-  this->Internals->AnimationManager.SetInteractor(interactor);
-  // b this->Internals->Interactor->SetAnimationManager(&this->Internals->AnimationManager);
-}
-/*b
-void scene_impl::PrintImporterDescription(log::VerboseLevel level)
-{
-  scene_impl::internals::DisplayImporterDescription(level, this->Internals->MetaImporter);
-}*/
+	static void CreateProgressRepresentationAndCallback(
+		ProgressDataStruct* data, vtkImporter* importer, vtkRenderWindowInteractor* interactor)//interactor_impl* interactor
+	{
+		vtkNew<vtkCallbackCommand> progressCallback;
+		progressCallback->SetClientData(data);
+		progressCallback->SetCallback(
+			[](vtkObject*, unsigned long, void* clientData, void* callData)
+			{
+				auto progressData = static_cast<ProgressDataStruct*>(clientData);
+				progressData->timer->StopTimer();
+				vtkProgressBarWidget* widget = progressData->widget;
+				// Only show and render the progress bar if loading takes more than 0.15 seconds
+				if (progressData->timer->GetElapsedTime() > 0.15 ||
+					vtksys::SystemTools::HasEnv("CTEST_F3D_PROGRESS_BAR"))
+				{
+					widget->On();
+					vtkProgressBarRepresentation* rep =
+						vtkProgressBarRepresentation::SafeDownCast(widget->GetRepresentation());
+					rep->SetProgressRate(*static_cast<double*>(callData));
+					widget->Render();
+				}
+			});
+		importer->AddObserver(vtkCommand::ProgressEvent, progressCallback);
 
-}
+		// b interactor->SetInteractorOn(data->widget); ????
+
+		vtkProgressBarRepresentation* progressRep =
+			vtkProgressBarRepresentation::SafeDownCast(data->widget->GetRepresentation());
+		progressRep->SetProgressRate(0.0);
+		progressRep->ProportionalResizeOff();
+		progressRep->SetPosition(0.0, 0.0);
+		progressRep->SetPosition2(1.0, 0.0);
+		progressRep->SetMinimumSize(0, 5);
+		progressRep->SetProgressBarColor(1, 1, 1);
+		progressRep->DrawBackgroundOff();
+		progressRep->DragableOff();
+		progressRep->SetShowBorderToOff();
+		progressRep->DrawFrameOff();
+		progressRep->SetPadding(0.0, 0.0);
+		data->timer->StartTimer();
+	}
+
+#endif

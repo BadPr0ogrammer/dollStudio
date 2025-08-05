@@ -8,26 +8,26 @@
 
 namespace DS {
 Settings::Settings(QObject* parent) :
-	QSettings(QSettings::NativeFormat, QSettings::UserScope, 
+	QSettings(QSettings::NativeFormat, QSettings::UserScope,
 		QApplication::organizationName(), QApplication::applicationName(), parent)
 {
 }
 
-bool Settings::showAxis() const
+bool Settings::showAxes() const
 {
-	return contains("showAxis") ? value("showAxis").toBool() : defaultShowAxis();
+	return contains("showAxes") ? value("showAxes").toBool() : defaultShowAxes();
 }
 
-void Settings::setShowAxis(bool show)
+void Settings::setShowAxes(bool show)
 {
-	const bool existingValue = value("showAxis", defaultShowAxis()).toBool();
+	const bool existingValue = value("showAxes", defaultShowAxes()).toBool();
 	if (show == existingValue)
 		return;
-	setValue("showAxis", show);
-	emit showAxisChanged();
+	setValue("showAxes", show);
+	emit showAxesChanged();
 }
 
-bool Settings::defaultShowAxis() const
+bool Settings::defaultShowAxes() const
 {
 	return false;
 }
@@ -55,4 +55,5 @@ void Settings::storeIt()
 {
 	sync();
 }
+
 }

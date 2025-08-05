@@ -133,12 +133,12 @@ ApplicationWindow {
         Menu {
             title: qsTr("&View")
             Action {
-                text: qsTr("&Axis")
-                onTriggered: projectManager.showAxis()
+                text: qsTr("&Axes")
+                onTriggered: projectManager.toggleShowAxes()
             }
             Action {
                 text: qsTr("&Grid")
-                onTriggered: projectManager.showGrid()
+                onTriggered: projectManager.toggleShowGrid()
             }
         }
         Menu {
