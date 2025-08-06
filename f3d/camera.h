@@ -8,7 +8,7 @@
 
 namespace f3d
 {
-struct /*F3D_EXPORT*/ camera_state_t
+struct camera_state_t
 {
   point3_t position = { 0., 0., 1. };
   point3_t focalPoint = { 0., 0., 0. };
@@ -25,7 +25,7 @@ struct /*F3D_EXPORT*/ camera_state_t
  * the view up is automatically orthogonalized.
  * All angles are in degrees.
  */
-class /*F3D_EXPORT*/ camera
+class camera
 {
 public:
   ///@{ @name Parameters

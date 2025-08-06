@@ -11,16 +11,27 @@
 #include <vtkObjectFactory.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
+#include <vtkOpenGLRenderer.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkCallbackCommand.h>
 #include <vtkRenderTimerLog.h>
 #include <vtkProgressBarWidget.h>
+#include <vtkBoundingBox.h>
+#include <vtkMatrix4x4.h>
+#include <vtkActor.h>
+#include <vtkOrientationMarkerWidget.h>
 
 #include "vtkF3DMetaImporter.h"
 #include "vtkF3DAssimpImporter.h"
+#include "vtkF3DOpenGLGridMapper.h"
 
-#include "window_impl.h"
-#include "scene_impl.h"
+namespace fs = std::filesystem;
+
+namespace f3d {
+namespace detail {
+class camera_impl;
+}
+}
 
 class aiNode;
 namespace DS
@@ -35,16 +46,24 @@ public:
 		static Data* New();
 		vtkTypeMacro(Data, vtkObject);
 		struct VtkItem* _vtkItem = nullptr;
+		vtkRenderWindow* _renWin = nullptr;
 
-		f3d::detail::window_impl* _win = nullptr;
-		f3d::detail::scene_impl* _scene = nullptr;
+		vtkSmartPointer<vtkCallbackCommand>			_timercb;
+		vtkSmartPointer<vtkF3DMetaImporter>			_importer;
 
-		vtkSmartPointer<vtkCallbackCommand> _timercb;
+		std::unique_ptr<f3d::detail::camera_impl>	_camera;
+		vtkSmartPointer<vtkOpenGLRenderer>			_renderer;
+
+		vtkSmartPointer<vtkOrientationMarkerWidget> _axiswidget;
+		vtkSmartPointer<vtkActor>					_gridactor;
+		vtkSmartPointer<vtkF3DOpenGLGridMapper>		_gridmapper;
 	};
 	QString _fname;
 
 	Manager*		_manager = nullptr;
 	const aiScene*	_aiscene = nullptr;
+
+	double _gridcolor[3] = { 0.3, 0.2, 0.3 };
 
 	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
 	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
@@ -52,10 +71,19 @@ public:
 	void openSource();
 	void close();
 	void play();
-	void setupOpt();
 	void setTreeView(Data* vtk);
 	void traversTree(QStandardItem* parent, const aiNode* node);
 	void timerCall();
 	void sliderMove();
+
+	void sceneAdd(VtkItem::Data* vtk, std::string fname);
+	void sceneClear(VtkItem::Data* vtk);
+	void sceneLoad(VtkItem::Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers);
+
+	void UpdateDynamicOptions(Data* vtk, bool force);
+	void ShowAxes(Data* vtk, bool show, bool force);
+	void ShowGrid(Data* vtk, bool show, bool force);
+	void ConfigureGridUsingCurrentActors(Data* vtk);
+	vtkBoundingBox ComputeVisiblePropOrientedBounds(Data* vtk, const vtkMatrix4x4* matrix);
 };
 }

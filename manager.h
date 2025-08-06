@@ -37,7 +37,7 @@ public:
 	QTimer _timer;
 	bool _playing = false;
 	double _curtime = -1;
-
+	double _timerg[2] = {0,0};
 	void resetAnim();
 
 	double _sliderval = 0.0;

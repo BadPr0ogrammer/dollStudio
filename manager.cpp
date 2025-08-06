@@ -21,8 +21,6 @@ Manager::Manager(QQmlEngine* engine)
 
 void Manager::setConnect()
 {
-	_vtk->setupOpt();
-
 	connect(&_timer, &QTimer::timeout, this, &Manager::timerSlot);
 	_timer.start();
 }
@@ -101,15 +99,15 @@ void Manager::timerSlot()
 {
 	if (_playing) {
 		_vtk->timerCall();
-		//////////////////setSliderVal(_sliderval + _step);
+		setSliderVal(_sliderval);
 	}
 }
 
 void Manager::setSliderVal(double val)
 {
-	if (_sliderval - val < 2*DBL_EPSILON) {
+	if (_sliderval - val > 2*DBL_EPSILON) {
 		_sliderval = val;
-		if (_sliderval > 1)
+		if (_sliderval > 1 || _sliderval < 0)
 			_sliderval = 0;
 		emit sliderValChanged();
 	}
@@ -130,7 +128,7 @@ void Manager::cameraReset()
 {
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-        vtk->_win->Camera->resetToBounds();
+        vtk->_camera->resetToBounds();
     });
     QThread::msleep(10);
 }
@@ -139,7 +137,7 @@ void Manager::toggleShowAxis()
 {
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-         vtk->_win->ShowAxes(!_settings->showAxes(), true);
+         vtk->_vtkItem->ShowAxes(vtk, !_settings->showAxes(), true);
     });
     QThread::msleep(10);
 }
@@ -148,7 +146,7 @@ void Manager::toggleShowGrid()
 {
 	_vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
 		VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-		vtk->_win->ShowGrid(!_settings->showGrid(), true);
+		vtk->_vtkItem->ShowGrid(vtk, !_settings->showGrid(), true);
 		});
 	QThread::msleep(10);
 }

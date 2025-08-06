@@ -45,11 +45,7 @@ qt_add_executable(${MYNAME}
     f3d/init.h
     f3d/reader.h
     f3d/reader_FBX.h
-    f3d/scene_impl.cxx
-    f3d/scene_impl.h
     f3d/types.h
-    f3d/window_impl.cxx
-    f3d/window_impl.h
 
     f3d/vtk/vtkF3DAssimpImporter.cxx
     f3d/vtk/vtkF3DAssimpImporter.h
@@ -61,6 +57,8 @@ qt_add_executable(${MYNAME}
     f3d/vtk/vtkF3DMetaImporter.h
     f3d/vtk/vtkF3DObjectFactory.cxx
     f3d/vtk/vtkF3DObjectFactory.h
+    f3d/vtk/vtkF3DOpenGLGridMapper.cxx 
+    f3d/vtk/vtkF3DOpenGLGridMapper.h
     f3d/vtk/vtkF3DPolyDataMapper.cxx
     f3d/vtk/vtkF3DPolyDataMapper.h
     f3d/vtk/vtkF3DPostProcessFilter.cxx
