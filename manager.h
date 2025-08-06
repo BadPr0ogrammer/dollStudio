@@ -35,17 +35,20 @@ public:
     Settings*           _settings = nullptr;
 
 	QTimer _timer;
-	double _step = 0;
+	bool _playing = false;
+	double _curtime = -1;
+
+	void resetAnim();
 
 	double _sliderval = 0.0;
 	double sliderVal() const { return _sliderval; }
 	void setSliderVal(double val);
 
 	void setConnect();
-	void setTreeModel(vtkF3DAssimpImporter* importer, bool clear);
+	void setTreeModel(vtkF3DAssimpImporter* importer);
 	void traversTree(QStandardItem* parent, const aiNode* node);
 
-	Q_INVOKABLE bool openSource(const QUrl& url, bool clear = true);
+	Q_INVOKABLE void openSource(const QUrl& url);
 	Q_INVOKABLE void playToggle();
 	Q_INVOKABLE void treeSelChanged(const QModelIndex& idx);
 	Q_INVOKABLE void onMoved(double val);

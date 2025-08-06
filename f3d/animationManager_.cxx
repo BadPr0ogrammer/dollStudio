@@ -1,6 +1,5 @@
 #include "animationManager.h"
 
-#include "macros.h"
 #include "window_impl.h"
 
 #include <QDebug>

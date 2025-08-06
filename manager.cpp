@@ -27,23 +27,20 @@ void Manager::setConnect()
 	_timer.start();
 }
 
-bool Manager::openSource(const QUrl& url, bool clear)
+void Manager::openSource(const QUrl& url)
 {
 	_vtk->_fname = url.toLocalFile();
-	return _vtk->openSource(clear);
+	return _vtk->openSource();
 }
 
 void Manager::playToggle()
 {
 	_vtk->play();
-	double d = _vtk->_animanager->TimeRange[1] - _vtk->_animanager->TimeRange[0];
-	_step = 1.0 / (30 * d);
 }
 
-void Manager::setTreeModel(vtkF3DAssimpImporter* importer, bool clear)
+void Manager::setTreeModel(vtkF3DAssimpImporter* importer)
 {
-	if (clear)
-		_treemodel->removeRows(0, _treemodel->rowCount());
+	_treemodel->removeRows(0, _treemodel->rowCount());
 
 	const aiNode* root = _vtk->_aiscene->mRootNode;
 	QStandardItem* item = _treemodel->invisibleRootItem();
@@ -102,9 +99,9 @@ void Manager::treeSelChanged(const QModelIndex& idx)
 
 void Manager::timerSlot()
 {
-	if (_vtk->_playf) {
+	if (_playing) {
 		_vtk->timerCall();
-		setSliderVal(_sliderval + _step);
+		//////////////////setSliderVal(_sliderval + _step);
 	}
 }
 
@@ -154,6 +151,12 @@ void Manager::toggleShowGrid()
 		vtk->_win->ShowGrid(!_settings->showGrid(), true);
 		});
 	QThread::msleep(10);
+}
+
+void Manager::resetAnim()
+{
+	_playing = false;
+	_curtime = 0;
 }
 
 }

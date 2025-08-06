@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <filesystem>
+#include <numeric>
 
 #include <vtkSmartPointer.h>
 
@@ -11,7 +12,7 @@ class vtkImporter;
 class vtkF3DMetaImporter;
 
 namespace DS {
-class Settings;
+class Manager;
 }
 
 namespace fs = std::filesystem;
@@ -21,13 +22,11 @@ namespace f3d
 namespace detail
 {
 class window_impl;
-class animationManager;
-
 class scene_impl
 {
 public:
 
-	scene_impl(DS::Settings* psettings, window_impl* window);
+	scene_impl(DS::Manager* pmanager, window_impl* window);
 	~scene_impl();
 
 	void add(const fs::path& filePath);
@@ -36,10 +35,9 @@ public:
 	bool supports(const fs::path& filePath);
 	void Load(const std::vector<vtkSmartPointer<vtkImporter>>& importers);
 
-	DS::Settings* settings = nullptr;
+	DS::Manager* manager = nullptr;
 	window_impl* Window = nullptr;
 
-	animationManager* AnimationManager = nullptr;
 	vtkNew<vtkF3DMetaImporter> MetaImporter;
 };
 

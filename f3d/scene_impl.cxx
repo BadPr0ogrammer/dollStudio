@@ -1,8 +1,7 @@
 #include "scene_impl.h"
 
-#include "animationManager.h"
 #include "window_impl.h"
-#include "factory.h"
+#include "reader_FBX.h"
 
 #include "vtkF3DGenericImporter.h"
 #include "vtkF3DMetaImporter.h"
@@ -13,29 +12,26 @@
 #include <vtkTimerLog.h>
 #include <vtkVersion.h>
 #include <vtksys/SystemTools.hxx>
-
 #include <vtkRenderWindowInteractor.h>
 
 #include <vector>
-
-#include "settings.h"
-
 #include <QDebug>
+
+#include "manager.h"
+#include "vtkitem.h"
+#include "settings.h"
 
 namespace fs = std::filesystem;
 using namespace f3d::detail;
 
-scene_impl::scene_impl(DS::Settings* psettings, window_impl* window)
-	: settings(psettings), Window(window)
+scene_impl::scene_impl(DS::Manager* pmanager, window_impl* window)
+	: manager(pmanager), Window(window)
 {
-	AnimationManager = new animationManager(psettings, window);
 	this->MetaImporter->SetRenderWindow(this->Window->RenWin);
-	AnimationManager->SetImporter(MetaImporter);
 }
 
 scene_impl::~scene_impl()
 {
-	delete AnimationManager;
 }
 
 void scene_impl::add(const fs::path& filePath)
@@ -64,7 +60,8 @@ void scene_impl::add(const std::vector<fs::path>& filePaths)
 		}
 		std::optional<std::string> forceReader;// = this->Internals->Options.scene.force_reader;
 		// Recover the importer for the provided file path
-		f3d::reader* reader = f3d::factory::instance()->getReader(filePath.string(), forceReader);
+		//f3d::reader* reader = f3d::factory::instance()->getReader(filePath.string(), forceReader);
+		reader_FBX* reader = new reader_FBX();
 		if (!reader) {
 			qDebug() << "Unable to reader.";
 			return;
@@ -102,9 +99,8 @@ void scene_impl::clear()
 
 bool scene_impl::supports(const fs::path& filePath)
 {
-	std::optional<std::string> force_reader;
-	return f3d::factory::instance()->getReader(
-		filePath.string(), /*this->Internals->Options.scene.*/force_reader) != nullptr;
+	std::string ext = filePath.extension().generic_string();
+	return ext == "fbx" || ext == "FBX" || ext == "Fbx";
 }
 
 void scene_impl::Load(const std::vector<vtkSmartPointer<vtkImporter>>& importers)
@@ -120,7 +116,7 @@ void scene_impl::Load(const std::vector<vtkSmartPointer<vtkImporter>>& importers
 		this->Window->Initialize();
 	}
 	// Initialize the animation using temporal information from the importer
-	this->AnimationManager->Initialize();
+	manager->resetAnim();
 }
 
 #if 0

@@ -1,7 +1,6 @@
 #include "window_impl.h"
 
 #include "camera_impl.h"
-#include "macros.h"
 
 #include <vtkCamera.h>
 #include <vtkImageData.h>

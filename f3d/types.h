@@ -1,8 +1,6 @@
 #ifndef f3d_types_h
 #define f3d_types_h
 
-#include "exception.h"
-
 #include <algorithm>
 #include <array>
 #include <iostream>
@@ -11,37 +9,18 @@
 
 namespace f3d
 {
-/**
- * An exception that can be thrown by any type if
- * it fails in the constructor for some reason.
- */
-struct type_construction_exception : public exception
-{
-  explicit type_construction_exception(const std::string& what = "")
-    : exception(what) {};
-};
-
-/**
- * An exception that can be thrown by any type if
- * it fails when accessing data for some reason.
- */
-struct type_access_exception : public exception
-{
-  explicit type_access_exception(const std::string& what = "")
-    : exception(what) {};
-};
 
 /**
  * Describe a 3D point.
  */
-struct /*F3D_EXPORT*/ point3_t : std::array<double, 3>
+struct point3_t : std::array<double, 3>
 {
 };
 
 /**
  * Describe a 3D vector.
  */
-struct /*F3D_EXPORT*/ vector3_t : std::array<double, 3>
+struct vector3_t : std::array<double, 3>
 {
 };
 
@@ -82,7 +61,7 @@ public:
   {
     if (vec.size() != N)
     {
-      throw f3d::type_construction_exception("Provided vector does not have the right size");
+      throw std::runtime_error("Provided vector does not have the right size");
     }
     std::copy_n(vec.begin(), N, this->Array.begin());
   }
@@ -90,7 +69,7 @@ public:
   {
     if (list.size() != N)
     {
-      throw f3d::type_construction_exception("Provided list does not have the right size");
+      throw std::runtime_error("Provided list does not have the right size");
     }
     std::copy_n(list.begin(), N, this->Array.begin());
   }
@@ -110,7 +89,7 @@ public:
   {
     if (i >= N)
     {
-      throw f3d::type_access_exception("Incorrect index");
+      throw std::runtime_error("Incorrect index");
     }
     return this->Array[i];
   }
@@ -118,7 +97,7 @@ public:
   {
     if (i >= N)
     {
-      throw f3d::type_access_exception("Incorrect index");
+      throw std::runtime_error("Incorrect index");
     }
     return this->Array[i];
   }
@@ -307,7 +286,7 @@ struct mesh_t
    * Returns a pair with the first element to true if the mesh is valid.
    * If invalid, an error message is returned in the second element.
    */
-  /*F3D_EXPORT*/ std::pair<bool, std::string> isValid() const;
+   std::pair<bool, std::string> isValid() const;
 };
 }
 

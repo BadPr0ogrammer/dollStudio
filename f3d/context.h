@@ -1,8 +1,6 @@
 #ifndef f3d_context_h
 #define f3d_context_h
 
-#include "exception.h"
-
 #include <functional>
 #include <string>
 
@@ -72,21 +70,6 @@ public:
    */
   [[nodiscard]] static function getSymbol(std::string_view lib, std::string_view func);
 
-  /**
-   * An exception that can be thrown when the requested library cannot be loaded.
-   */
-  struct loading_exception : public exception
-  {
-    explicit loading_exception(const std::string& what = "");
-  };
-
-  /**
-   * An exception that can be thrown when the symbol resolver cannot be found in the library.
-   */
-  struct symbol_exception : public exception
-  {
-    explicit symbol_exception(const std::string& what = "");
-  };
 };
 }
 

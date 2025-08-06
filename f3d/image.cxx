@@ -111,14 +111,14 @@ public:
       case SaveFormat::PNG:
         if (type != ChannelType::BYTE && type != ChannelType::SHORT)
         {
-          throw write_exception("PNG format is only compatible with BYTE or SHORT channel types");
+          throw std::runtime_error("PNG format is only compatible with BYTE or SHORT channel types");
         }
         break;
       case SaveFormat::JPG:
       case SaveFormat::BMP:
         if (type != ChannelType::BYTE)
         {
-          throw write_exception(
+          throw std::runtime_error(
             saveFormatString.at(format) + " format is only compatible with BYTE channel types");
         }
         break;
@@ -131,7 +131,7 @@ public:
       case SaveFormat::JPG:
         if (count != 1 && count != 3)
         {
-          throw write_exception("JPG format is only compatible with a channel count of 1 or 3");
+          throw std::runtime_error("JPG format is only compatible with a channel count of 1 or 3");
         }
         break;
       case SaveFormat::PNG:
@@ -139,7 +139,7 @@ public:
       case SaveFormat::TIF:
         if (count < 1 || count > 4)
         {
-          throw write_exception(saveFormatString.at(format) +
+          throw std::runtime_error(saveFormatString.at(format) +
             " format is only compatible with a channel count between 1 to 4");
         }
         break;
@@ -185,7 +185,7 @@ image::image(const fs::path& filePath)
   {
     if (!fs::exists(filePath))
     {
-      throw read_exception("Cannot open image " + filePath.string());
+      throw std::runtime_error("Cannot open image " + filePath.string());
     }
 
     auto reader = vtkSmartPointer<vtkImageReader2>::Take(
@@ -206,12 +206,12 @@ image::image(const fs::path& filePath)
 
     if (!this->Internals->Image)
     {
-      throw read_exception("Cannot read image " + filePath.string());
+      throw std::runtime_error("Cannot read image " + filePath.string());
     }
   }
   catch (const fs::filesystem_error& ex)
   {
-    throw read_exception(std::string("Cannot read image: ") + ex.what());
+    throw std::runtime_error(std::string("Cannot read image: ") + ex.what());
   }
 }
 
@@ -316,7 +316,7 @@ image::ChannelType image::getChannelType() const
     default:
       break;
   }
-  throw read_exception("Unknown channel type");
+  throw std::runtime_error("Unknown channel type");
 }
 
 //----------------------------------------------------------------------------
@@ -491,12 +491,12 @@ const image& image::save(const fs::path& filePath, SaveFormat format) const
 
     if (writer->GetErrorCode() != 0)
     {
-      throw write_exception("Cannot write image " + filePath.string());
+      throw std::runtime_error("Cannot write image " + filePath.string());
     }
   }
   catch (const fs::filesystem_error& ex)
   {
-    throw write_exception(std::string("Cannot write image: ") + ex.what());
+    throw std::runtime_error(std::string("Cannot write image: ") + ex.what());
   }
 
   return *this;
@@ -520,7 +520,7 @@ std::vector<unsigned char> image::saveBuffer(SaveFormat format) const
     case SaveFormat::BMP:
       return this->Internals->SaveBuffer(vtkSmartPointer<vtkBMPWriter>::New());
     default:
-      throw write_exception(
+      throw std::runtime_error(
         "Cannot save to buffer in the specified format: " + internals::saveFormatString.at(format));
   }
 }
@@ -531,7 +531,7 @@ const image& image::toTerminalText(std::ostream& stream) const
   const int depth = this->getChannelCount();
   if (this->getChannelType() != ChannelType::BYTE || depth < 3 || depth > 4)
   {
-    throw write_exception("image must be byte RGB or RGBA");
+    throw std::runtime_error("image must be byte RGB or RGBA");
   }
 
   int dims[3];
@@ -687,7 +687,7 @@ std::string image::getMetadata(const std::string& key) const
   {
     return this->Internals->Metadata[key];
   }
-  throw metadata_exception("No such key: " + key);
+  throw std::runtime_error("No such key: " + key);
 }
 
 //----------------------------------------------------------------------------
@@ -697,24 +697,6 @@ std::vector<std::string> image::allMetadata() const
   std::transform(this->Internals->Metadata.begin(), this->Internals->Metadata.end(),
     std::back_inserter(keys), [](const auto& kv) { return kv.first; });
   return keys;
-}
-
-//----------------------------------------------------------------------------
-image::write_exception::write_exception(const std::string& what)
-  : exception(what)
-{
-}
-
-//----------------------------------------------------------------------------
-image::read_exception::read_exception(const std::string& what)
-  : exception(what)
-{
-}
-
-//----------------------------------------------------------------------------
-image::metadata_exception::metadata_exception(const std::string& what)
-  : exception(what)
-{
 }
 
 }

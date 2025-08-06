@@ -19,7 +19,6 @@
 #include "vtkF3DMetaImporter.h"
 #include "vtkF3DAssimpImporter.h"
 
-#include "animationManager.h"
 #include "window_impl.h"
 #include "scene_impl.h"
 
@@ -44,19 +43,17 @@ public:
 	};
 	QString _fname;
 
-	Manager*						_manager = nullptr;
-    bool							_playf = false;
-	f3d::detail::animationManager*	_animanager = nullptr;
-	const aiScene*					_aiscene = nullptr;
+	Manager*		_manager = nullptr;
+	const aiScene*	_aiscene = nullptr;
 
 	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
 	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
 
-	bool openSource(bool clear);
+	void openSource();
 	void close();
 	void play();
 	void setupOpt();
-	void setTreeView(Data* vtk, bool clear);
+	void setTreeView(Data* vtk);
 	void traversTree(QStandardItem* parent, const aiNode* node);
 	void timerCall();
 	void sliderMove();

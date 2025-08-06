@@ -9,14 +9,12 @@
 #ifndef vtkF3DImporter_h
 #define vtkF3DImporter_h
 
-#include "vtkextModule.h"
-
 #include <vtkImporter.h>
 #include <vtkVersion.h>
 
 class vtkInformationIntegerKey;
 
-class /*VTKEXT_EXPORT*/ vtkF3DImporter : public vtkImporter
+class vtkF3DImporter : public vtkImporter
 {
 public:
   /**

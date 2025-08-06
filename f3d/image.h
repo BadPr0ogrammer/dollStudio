@@ -1,8 +1,6 @@
 #ifndef f3d_image_h
 #define f3d_image_h
 
-#include "exception.h"
-
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -204,33 +202,7 @@ public:
    */
   [[nodiscard]] std::vector<std::string> allMetadata() const;
 
-  /**
-   * An exception that can be thrown by the image when there.
-   * is an error on write.
-   */
-  struct write_exception : public exception
-  {
-    explicit write_exception(const std::string& what = "");
-  };
-
-  /**
-   * An exception that can be thrown by the image.
-   * when there is an error on read.
-   */
-  struct read_exception : public exception
-  {
-    explicit read_exception(const std::string& what = "");
-  };
-
-  /**
-   * An exception that can be thrown by the image.
-   * when there is an error related to metadata
-   */
-  struct metadata_exception : public exception
-  {
-    explicit metadata_exception(const std::string& what = "");
-  };
-
+ 
 private:
   class internals;
   internals* Internals;

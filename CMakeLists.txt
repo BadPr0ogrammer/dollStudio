@@ -34,24 +34,22 @@ qt_add_executable(${MYNAME}
     settings.h
     qml.qrc
 
-    f3d/animationManager.cxx
-    f3d/animationManager.h
-    f3d/init.cxx
-    f3d/init.h
-    f3d/window_impl.cxx
-    f3d/window_impl.h
-    f3d/scene_impl.cxx
-    f3d/scene_impl.h
+    f3d/camera.h
     f3d/camera_impl.cxx
     f3d/camera_impl.h
-    f3d/image.cxx
-    f3d/image.h
     f3d/context.cxx
     f3d/context.h
-    f3d/factory.cxx
-    f3d/factory.h
-    f3d/plugin.cxx
-    f3d/plugin.h
+    f3d/image.cxx
+    f3d/image.h
+    f3d/init.cxx
+    f3d/init.h
+    f3d/reader.h
+    f3d/reader_FBX.h
+    f3d/scene_impl.cxx
+    f3d/scene_impl.h
+    f3d/types.h
+    f3d/window_impl.cxx
+    f3d/window_impl.h
 
     f3d/vtk/vtkF3DAssimpImporter.cxx
     f3d/vtk/vtkF3DAssimpImporter.h
@@ -61,14 +59,14 @@ qt_add_executable(${MYNAME}
     f3d/vtk/vtkF3DImporter.h
     f3d/vtk/vtkF3DMetaImporter.cxx
     f3d/vtk/vtkF3DMetaImporter.h
-    f3d/vtk/vtkF3DPostProcessFilter.cxx
-    f3d/vtk/vtkF3DPostProcessFilter.h
-    f3d/vtk/vtkF3DPolyDataMapper.cxx
-    f3d/vtk/vtkF3DPolyDataMapper.h
-    f3d/vtk/vtkF3DWGLRenderWindow.cxx
-    f3d/vtk/vtkF3DWGLRenderWindow.h
     f3d/vtk/vtkF3DObjectFactory.cxx
     f3d/vtk/vtkF3DObjectFactory.h
+    f3d/vtk/vtkF3DPolyDataMapper.cxx
+    f3d/vtk/vtkF3DPolyDataMapper.h
+    f3d/vtk/vtkF3DPostProcessFilter.cxx
+    f3d/vtk/vtkF3DPostProcessFilter.h
+    f3d/vtk/vtkF3DWGLRenderWindow.cxx
+    f3d/vtk/vtkF3DWGLRenderWindow.h
 )
 
 qt_add_qml_module(${MYNAME}

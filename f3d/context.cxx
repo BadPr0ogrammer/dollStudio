@@ -26,7 +26,7 @@ context::function context::getSymbol(std::string_view lib, std::string_view func
 
   if (!handle)
   {
-    throw context::loading_exception("Cannot find " + std::string(lib) + " library");
+    throw std::runtime_error("Cannot find " + std::string(lib) + " library");
   }
 
   using symbol = context::fptr (*)(const char*);
@@ -36,7 +36,7 @@ context::function context::getSymbol(std::string_view lib, std::string_view func
 
   if (!address)
   {
-    throw context::symbol_exception("Cannot find " + std::string(func) + " symbol");
+    throw std::runtime_error("Cannot find " + std::string(func) + " symbol");
   }
 
   return address;
@@ -48,7 +48,7 @@ context::function context::glx()
 #if defined(VTK_USE_X) && VTK_VERSION_NUMBER >= VTK_VERSION_CHECK(9, 3, 20240914)
   return getSymbol("GLX", "glXGetProcAddress");
 #else
-  throw loading_exception("Cannot use a GLX context on this platform");
+  throw std::runtime_error("Cannot use a GLX context on this platform");
 #endif
 }
 
@@ -68,7 +68,7 @@ context::function context::wgl()
     return p;
   };
 #else
-  throw loading_exception("Cannot use a WGL context on this platform");
+  throw std::runtime_error("Cannot use a WGL context on this platform");
 #endif
 }
 
@@ -82,7 +82,7 @@ context::function context::cocoa()
     return p;
   };
 #else
-  throw loading_exception("Cannot use a COCOA context on this platform");
+  throw std::runtime_error("Cannot use a COCOA context on this platform");
 #endif
 }
 
@@ -93,7 +93,7 @@ context::function context::egl()
   gladLoaderLoadEGL(EGL_NO_DISPLAY);
   return getSymbol("EGL", "eglGetProcAddress");
 #else
-  throw loading_exception("Cannot use a EGL context on this platform");
+  throw std::runtime_error("Cannot use a EGL context on this platform");
 #endif
 }
 
@@ -105,19 +105,7 @@ context::function context::osmesa()
 #elif _WIN32
   return getSymbol("osmesa", "OSMesaGetProcAddress");
 #else
-  throw loading_exception("Cannot use a OSMesa context on this platform");
+  throw std::runtime_error("Cannot use a OSMesa context on this platform");
 #endif
-}
-
-//----------------------------------------------------------------------------
-context::loading_exception::loading_exception(const std::string& what)
-  : exception(what)
-{
-}
-
-//----------------------------------------------------------------------------
-context::symbol_exception::symbol_exception(const std::string& what)
-  : exception(what)
-{
 }
 }
