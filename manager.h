@@ -54,7 +54,7 @@ public:
 	Q_INVOKABLE void onMoved(double val);
     Q_INVOKABLE void closeSource();
     Q_INVOKABLE void cameraReset();
-    Q_INVOKABLE void toggleShowAxis();
+    Q_INVOKABLE void toggleShowAxes();
 	Q_INVOKABLE void toggleShowGrid();
 signals:	
 	void sliderValChanged();

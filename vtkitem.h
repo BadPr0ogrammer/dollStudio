@@ -45,6 +45,7 @@ public:
 	{
 		static Data* New();
 		vtkTypeMacro(Data, vtkObject);
+
 		struct VtkItem* _vtkItem = nullptr;
 		vtkRenderWindow* _renWin = nullptr;
 
@@ -76,11 +77,10 @@ public:
 	void timerCall();
 	void sliderMove();
 
-	void sceneAdd(VtkItem::Data* vtk, std::string fname);
-	void sceneClear(VtkItem::Data* vtk);
-	void sceneLoad(VtkItem::Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers);
-
-	void UpdateDynamicOptions(Data* vtk, bool force);
+	void sceneAdd(Data* vtk, std::string fname);
+	void sceneClear(Data* vtk);
+	void sceneLoad(Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers);
+	void UpdateDynamicOptions(Data* vtk);
 	void ShowAxes(Data* vtk, bool show, bool force);
 	void ShowGrid(Data* vtk, bool show, bool force);
 	void ConfigureGridUsingCurrentActors(Data* vtk);

@@ -133,11 +133,12 @@ void Manager::cameraReset()
     QThread::msleep(10);
 }
 
-void Manager::toggleShowAxis()
+void Manager::toggleShowAxes()
 {
     _vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
         VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-         vtk->_vtkItem->ShowAxes(vtk, !_settings->showAxes(), true);
+		_settings->setShowAxes(!_settings->showAxes());
+		vtk->_vtkItem->ShowAxes(vtk, _settings->showAxes(), true);
     });
     QThread::msleep(10);
 }
@@ -146,7 +147,8 @@ void Manager::toggleShowGrid()
 {
 	_vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
 		VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
-		vtk->_vtkItem->ShowGrid(vtk, !_settings->showGrid(), true);
+		_settings->setShowGrid(!_settings->showGrid());
+		vtk->_vtkItem->ShowGrid(vtk, _settings->showGrid(), true);
 		});
 	QThread::msleep(10);
 }

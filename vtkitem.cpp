@@ -64,12 +64,16 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 				mgr->_curtime = mgr->_timerg[0];
 			if (!vtk->_importer->UpdateAtTimeValue(mgr->_curtime))
 				qDebug() << "Importer update error.";
+            else {
+                mgr->_sliderval = (mgr->_curtime - mgr->_timerg[0]) / (mgr->_timerg[1] - mgr->_timerg[0]);
+                emit mgr->sliderValChanged();
+            }
 		}
 		});
 	renderWindow->GetInteractor()->AddObserver(vtkCommand::TimerEvent, vtk->_timercb);
 	vtk->_timercb->SetClientData(vtk);
 
-	vtk->_vtkItem->UpdateDynamicOptions(vtk, true);
+	vtk->_vtkItem->UpdateDynamicOptions(vtk);
 	return vtk;
 }
 
@@ -80,7 +84,7 @@ void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
     vtk->_camera.reset();
 
     vtk->_gridactor->Delete();
-    vtk->_axiswidget->Delete();
+    //vtk->_axiswidget->Delete();
     vtk->_gridmapper->Delete();
 
 	vtk->_timercb->Delete();
@@ -100,7 +104,7 @@ void VtkItem::openSource()
 			vtk->_vtkItem->sceneClear(vtk);
 			vtk->_vtkItem->sceneAdd(vtk, vtk->_vtkItem->_fname.toStdString());
 			vtk->_camera->resetToBounds();
-			vtk->_vtkItem->UpdateDynamicOptions(vtk, true);
+			vtk->_vtkItem->UpdateDynamicOptions(vtk);
 
 			vtk->_vtkItem->setTreeView(vtk);
 			vtk->_importer->EnableAnimation(0);
@@ -152,19 +156,6 @@ void VtkItem::sliderMove()
 	QThread::msleep(10);
 }
 
-namespace fs = std::filesystem;
-using namespace f3d::detail;
-/*
-scene_impl::scene_impl(DS::Manager* pmanager, window_impl* window)
-	: manager(pmanager), Window(window)
-{
-	this->MetaImporter->SetRenderWindow(this->Window->RenWin);
-}
-
-scene_impl::~scene_impl()
-{
-}
-*/
 void VtkItem::sceneAdd(VtkItem::Data* vtk, std::string fname)
 {
 	std::vector<vtkSmartPointer<vtkImporter>> importers;
@@ -248,10 +239,10 @@ window_impl::~window_impl()
     // ??? this->GridActor->SetVisibility(false);
 }
 */
-void VtkItem::UpdateDynamicOptions(VtkItem::Data* vtk, bool force)
+void VtkItem::UpdateDynamicOptions(VtkItem::Data* vtk)
 {
-    ShowAxes(vtk, _manager->_settings->showAxes(), force);
-    ShowGrid(vtk, _manager->_settings->showGrid(), force);
+    ShowAxes(vtk, _manager->_settings->showAxes(), true);
+    ShowGrid(vtk, _manager->_settings->showGrid(), true);
 }
 
 void VtkItem::ShowAxes(VtkItem::Data* vtk, bool show, bool force)
@@ -276,19 +267,14 @@ void VtkItem::ShowAxes(VtkItem::Data* vtk, bool show, bool force)
             vtk->_axiswidget->SetViewport(0.0, 0.0, 0.2, 0.2);
         }
     }
-    if (_manager->_settings->showAxes() != show)
-        _manager->_settings->setShowAxes(show);
 }
 
 void VtkItem::ShowGrid(VtkItem::Data* vtk, bool show, bool force)
 {
     if (_manager->_settings->showGrid() != show || force)
     {
-        vtk->_gridactor->SetVisibility(show);
         ConfigureGridUsingCurrentActors(vtk);
     }
-    if (_manager->_settings->showGrid() != show)
-        _manager->_settings->setShowGrid(show);
 }
 
 void VtkItem::ConfigureGridUsingCurrentActors(VtkItem::Data* vtk)

@@ -9,8 +9,12 @@ import "."
 ColumnLayout {
 
     function applyChangesToSettings() {
-        settings.showAxes = showAxesBox.checked
-        settings.showGrid = showGridBox.checked
+        if (settings.showAxes != showAxesBox.checked) {
+            projectManager.toggleShowAxes()
+        }
+        if (settings.showGrid != showGridBox.checked) {
+            projectManager.toggleShowGrid()
+        }
         settings.storeIt();
     }
 

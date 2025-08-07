@@ -134,10 +134,14 @@ ApplicationWindow {
             title: qsTr("&View")
             Action {
                 text: qsTr("&Axes")
+                checkable: true
+                checked: settings.showAxes
                 onTriggered: projectManager.toggleShowAxes()
             }
             Action {
                 text: qsTr("&Grid")
+                checkable: true
+                checked: settings.showGrid
                 onTriggered: projectManager.toggleShowGrid()
             }
         }
