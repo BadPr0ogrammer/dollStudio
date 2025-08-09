@@ -2,7 +2,6 @@ import QtQml.Models
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import QtQuick.Controls.Material
 
 import Dollstudio 1.0
 import "."
@@ -13,9 +12,7 @@ Dialog {
     modal: true
     focus: true
     implicitWidth: 500
-    implicitHeight: 400
-    Material.theme: Material.Dark
-    Material.accent: Material.Teal
+    implicitHeight: 400    
 
     standardButtons: Dialog.Ok | Dialog.Cancel
     
@@ -49,7 +46,7 @@ Dialog {
     StackLayout {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
-
+        
         AppearanceTab {
             id: appearanceTab
         }

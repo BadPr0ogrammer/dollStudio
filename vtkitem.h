@@ -5,6 +5,8 @@
 #include <QString>
 #include <QStandardItem>
 #include <QTreeView>
+#include <QMutex>
+#include <QWaitCondition>
 
 #include <vtkNew.h>
 #include <vtkObject.h>
@@ -57,19 +59,17 @@ public:
 
 		vtkSmartPointer<vtkOrientationMarkerWidget> _axiswidget;
 		vtkSmartPointer<vtkActor>					_gridactor;
-		vtkSmartPointer<vtkF3DOpenGLGridMapper>		_gridmapper;
+		vtkSmartPointer<vtkF3DOpenGLGridMapper>		_gridmapper;		
 	};
-	QString _fname;
-
 	Manager*		_manager = nullptr;
 	const aiScene*	_aiscene = nullptr;
-
+	QString _fname;
 	double _gridcolor[3] = { 0.3, 0.2, 0.3 };
 
 	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
 	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
 
-	void openSource();
+    void openSource(const QUrl& url);
 	void close();
 	void play();
 	void setTreeView(Data* vtk);
@@ -77,13 +77,15 @@ public:
 	void timerCall();
 	void sliderMove();
 
-	void sceneAdd(Data* vtk, std::string fname);
+    bool sceneAdd(Data* vtk, std::string fname);
 	void sceneClear(Data* vtk);
-	void sceneLoad(Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers);
+    bool sceneLoad(Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers);
+
 	void UpdateDynamicOptions(Data* vtk);
 	void ShowAxes(Data* vtk, bool show, bool force);
 	void ShowGrid(Data* vtk, bool show, bool force);
 	void ConfigureGridUsingCurrentActors(Data* vtk);
 	vtkBoundingBox ComputeVisiblePropOrientedBounds(Data* vtk, const vtkMatrix4x4* matrix);
+    void InitializeUpVector(Data* vtk, const std::vector<double>& upVec, const std::vector<double>& rightVec);
 };
 }

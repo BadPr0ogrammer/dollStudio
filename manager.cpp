@@ -27,8 +27,7 @@ void Manager::setConnect()
 
 void Manager::openSource(const QUrl& url)
 {
-	_vtk->_fname = url.toLocalFile();
-	return _vtk->openSource();
+	_vtk->openSource(url);
 }
 
 void Manager::playToggle()
@@ -122,6 +121,11 @@ void Manager::onMoved(double val)
 void Manager::closeSource()
 {
     _vtk->close();
+
+    delete _treemodel;
+    _treemodel = nullptr;
+    delete _listmodel;
+    _listmodel = nullptr;
 }
 
 void Manager::cameraReset()
@@ -149,6 +153,23 @@ void Manager::toggleShowGrid()
 		VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
 		_settings->setShowGrid(!_settings->showGrid());
 		vtk->_vtkItem->ShowGrid(vtk, _settings->showGrid(), true);
+		});
+	QThread::msleep(10);
+}
+
+void Manager::setDirection()
+{
+	_vtk->dispatch_async([&](vtkRenderWindow* renderWindow, VtkItem::vtkUserData userData) {
+		VtkItem::Data* vtk = (VtkItem::Data*)userData.GetPointer();
+		int up = _settings->upDirection();
+		int right = _settings->rightDirection();
+		f3d::direction_t up_direction = _settings->getDirectionFromIdx(up);
+        f3d::direction_t right_direction = _settings->getDirectionFromIdx(right);
+
+        vtk->_vtkItem->InitializeUpVector(vtk, up_direction, right_direction);
+		vtk->_camera->resetToBounds();
+		if (_settings->showGrid())
+			vtk->_vtkItem->ShowGrid(vtk, true, true);
 		});
 	QThread::msleep(10);
 }

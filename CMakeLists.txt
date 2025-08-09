@@ -19,8 +19,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
 find_package(VTK REQUIRED)
 find_package(assimp REQUIRED)
 
-qt_standard_project_setup(REQUIRES 6.8)
-
 qt_add_executable(${MYNAME}
     MANUAL_FINALIZATION
     app.cpp 
@@ -98,8 +96,6 @@ target_link_libraries(${MYNAME}
     ${VTK_LIBRARIES}
     assimp::assimp
     assimp::zlibstatic
-    Qsk::QSkinny
-    Qsk::QmlExport
     #/usr/local/lib64/qskinny/libqsktestsupport.so
     Qt6::qtquickdialogs2quickimplplugin
     Qt6::qtquickdialogsplugin
@@ -109,7 +105,6 @@ endif()
 
 target_include_directories(${MYNAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/f3d
-    ${CMAKE_SOURCE_DIR}/f3d/F3D
     ${CMAKE_SOURCE_DIR}/f3d/vtk
 )
 target_include_directories(${MYNAME} PUBLIC ${ASSIMP_ROOT_DIR}/include)

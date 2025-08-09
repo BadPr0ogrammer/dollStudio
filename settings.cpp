@@ -51,9 +51,65 @@ bool Settings::defaultShowGrid() const
 	return false;
 }
 
+int Settings::upDirection() const
+{
+	return contains("upDirection") ? value("upDirection").toInt() : defaultUpDirection();
+}
+
+void Settings::setUpDirection(int idx)
+{
+	const int existingValue = value("upDirection", defaultUpDirection()).toInt();
+	if (idx == existingValue)
+		return;
+	setValue("upDirection", idx);
+	emit upDirectionChanged();
+}
+
+int Settings::defaultUpDirection() const
+{
+	return 1;
+}
+
+int Settings::rightDirection() const
+{
+	return contains("rightDirection") ? value("rightDirection").toInt() : defaultRightDirection();
+}
+
+void Settings::setRightDirection(int idx)
+{
+	const int existingValue = value("rightDirection", defaultRightDirection()).toInt();
+	if (idx == existingValue)
+		return;
+	setValue("rightDirection", idx);
+	emit rightDirectionChanged();
+}
+
+int Settings::defaultRightDirection() const
+{
+	return 0;
+}
+
 void Settings::storeIt()
 {
 	sync();
+}
+
+f3d::direction_t Settings::getDirectionFromIdx(int idx)
+{
+	f3d::direction_t direction = f3d::direction_t{ 1, 0, 0 };
+	switch (idx) {
+	case 1:	direction = f3d::direction_t{ 0, 1, 0 };
+		  break;
+	case 2:	direction = f3d::direction_t{ 0, 0, 1 };
+		  break;
+	case 3:	direction = f3d::direction_t{ -1, 0, 0 };
+		  break;
+	case 4:	direction = f3d::direction_t{ 0, -1, 0 };
+		  break;
+	case 5:	direction = f3d::direction_t{ 0, 0, -1 };
+		  break;
+	}
+	return direction;
 }
 
 }

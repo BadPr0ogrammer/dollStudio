@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts 
 import QtQuick.Controls
-import QtQuick.Controls.Material
 
 import Dollstudio 1.0
 import "."
@@ -15,12 +14,20 @@ ColumnLayout {
         if (settings.showGrid != showGridBox.checked) {
             projectManager.toggleShowGrid()
         }
+        if (settings.upDirection != upDirectionCBox.currentIndex
+        ||  settings.rightDirection != rightDirectionCBox.currentIndex) {
+            settings.upDirection = upDirectionCBox.currentIndex;
+            settings.rightDirection = rightDirectionCBox.currentIndex;
+            projectManager.setDirection()
+        }
         settings.storeIt();
     }
 
     function revertToOldSettings() {
         showAxesBox.checked = settings.showAxes
         showGridBox.checked = settings.showGrid
+        upDirectionCBox.currentIndex = settings.upDirection
+        rightDirectionCBox.currentIndex = settings.rightDirection
     }
 
     Item {
@@ -55,6 +62,24 @@ ColumnLayout {
                 id: showGridBox
                 checked: settings.showGrid
                 leftPadding: 0
+            }
+            Label {
+                text: qsTr("Up direction")
+            }
+            ComboBox {
+                id: upDirectionCBox
+                objectName: "upDirectionCBox"
+                Component.onCompleted: currentIndex = settings.upDirection
+                model: ["+X","+Y","+Z","-X","-Y","-Z"]
+            }
+            Label {
+                text: qsTr("Right direction")
+            }
+            ComboBox {
+                id: rightDirectionCBox
+                objectName: "rightDirectionCBox"
+                Component.onCompleted: currentIndex = settings.rightDirection
+                model: ["+X","+Y","+Z","-X","-Y","-Z"]
             }
         }
     }

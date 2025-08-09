@@ -22,9 +22,10 @@ class Manager : public QObject
 	Q_OBJECT
     QML_ELEMENT
 	Q_PROPERTY(double sliderVal READ sliderVal WRITE setSliderVal NOTIFY sliderValChanged)
+	Q_PROPERTY(int sourceRet    READ sourceRet WRITE setSourceRet NOTIFY sourceRetChanged)
+
     Q_PROPERTY(QStandardItemModel* treeModel MEMBER _treemodel NOTIFY    treeModelChanged)
     Q_PROPERTY(QStringListModel*   listModel MEMBER _listmodel NOTIFY    listModelChanged)
-
 public:
 	Manager(QQmlEngine* engine);
 	
@@ -44,11 +45,15 @@ public:
 	double sliderVal() const { return _sliderval; }
 	void setSliderVal(double val);
 
+	int _sourceRet = -1;
+	int sourceRet() const { return _sourceRet; }
+	void setSourceRet(int val) { _sourceRet = val; emit sourceRetChanged(); }
+
 	void setConnect();
 	void setTreeModel(vtkF3DAssimpImporter* importer);
 	void traversTree(QStandardItem* parent, const aiNode* node);
 
-	Q_INVOKABLE void openSource(const QUrl& url);
+    Q_INVOKABLE void openSource(const QUrl& url);
 	Q_INVOKABLE void playToggle();
 	Q_INVOKABLE void treeSelChanged(const QModelIndex& idx);
 	Q_INVOKABLE void onMoved(double val);
@@ -56,10 +61,12 @@ public:
     Q_INVOKABLE void cameraReset();
     Q_INVOKABLE void toggleShowAxes();
 	Q_INVOKABLE void toggleShowGrid();
+	Q_INVOKABLE void setDirection();
 signals:	
 	void sliderValChanged();
     void treeModelChanged();
     void listModelChanged();
+	void sourceRetChanged();
 public slots:
 	void timerSlot();
 };

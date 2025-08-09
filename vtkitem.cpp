@@ -8,6 +8,7 @@
 #include <vtkDataAssembly.h>
 #include <vtkProgressBarRepresentation.h>
 #include <vtkAxesActor.h>
+#include <vtkActorCollection.h>
 
 #include "vtkF3DGenericImporter.h"
 #include "vtkF3DMetaImporter.h"
@@ -74,6 +75,8 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 	vtk->_timercb->SetClientData(vtk);
 
 	vtk->_vtkItem->UpdateDynamicOptions(vtk);
+    
+    qDebug() << "VTK window class type is " << renderWindow->GetClassName();
 	return vtk;
 }
 
@@ -93,26 +96,31 @@ void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
     vtk->_renderer->Delete();
 }
 
-void VtkItem::openSource()
+void VtkItem::openSource(const QUrl& url)
 {
-	dispatch_async([](vtkRenderWindow* renderWindow, vtkUserData userData) {
+    _fname = url.toLocalFile();
+    _manager->_sourceRet = -1;
+    dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		Data* vtk = (Data*)userData.GetPointer();
 		auto mgr = vtk->_vtkItem->_manager;
 		mgr->_playing = false;
 		if (renderWindow->IsCurrent())
 		{
 			vtk->_vtkItem->sceneClear(vtk);
-			vtk->_vtkItem->sceneAdd(vtk, vtk->_vtkItem->_fname.toStdString());
-			vtk->_camera->resetToBounds();
-			vtk->_vtkItem->UpdateDynamicOptions(vtk);
+            if (vtk->_vtkItem->sceneAdd(vtk, vtk->_vtkItem->_fname.toStdString())) {
+                vtk->_vtkItem->UpdateDynamicOptions(vtk);
 
-			vtk->_vtkItem->setTreeView(vtk);
-			vtk->_importer->EnableAnimation(0);
-			int n;
-			vtk->_importer->GetTemporalInformation(0, 30, n, mgr->_timerg, nullptr);
+                vtk->_vtkItem->setTreeView(vtk);
+                vtk->_importer->EnableAnimation(0);
+                int n;
+                vtk->_importer->GetTemporalInformation(0, 30, n, mgr->_timerg, nullptr);
+                
+                _manager->setSourceRet(1);
+                return;
+            }
 		}
-		});
-	QThread::msleep(10);
+        _manager->setSourceRet(0);		
+        });
 }
 
 void VtkItem::setTreeView(Data* vtk)
@@ -156,91 +164,79 @@ void VtkItem::sliderMove()
 	QThread::msleep(10);
 }
 
-void VtkItem::sceneAdd(VtkItem::Data* vtk, std::string fname)
+bool VtkItem::sceneAdd(VtkItem::Data* vtk, std::string fname)
 {
 	std::vector<vtkSmartPointer<vtkImporter>> importers;
 
     if (!vtksys::SystemTools::FileExists(fname, true)) {
 	    qDebug() << fname + " does not exists";
-		return;
+        return false;
 	}
 	reader_FBX* reader = new reader_FBX();
 	if (!reader) {
-	    qDebug() << "Unable to FBX reader.";
-		return;
+
+        return false;
 	}
 
 	vtkSmartPointer<vtkImporter> importer = reader->createSceneReader(fname);
 	if (!importer) {
+        qDebug() << "Unable to FBX reader.";
+        return false;
 	    // XXX: F3D Plugin CMake logic ensure there is either a scene reader or a geometry reader
+        /*
 		auto vtkReader = reader->createGeometryReader(fname);
 		assert(vtkReader);
 		vtkSmartPointer<vtkF3DGenericImporter> genericImporter =
 			vtkSmartPointer<vtkF3DGenericImporter>::New();
 		genericImporter->SetInternalReader(vtkReader);
 		importer = genericImporter;
+        */
 	}
 	importers.emplace_back(importer);
 
-	sceneLoad(vtk, importers);
+    return sceneLoad(vtk, importers);
 }
 
 void VtkItem::sceneClear(VtkItem::Data* vtk)
 {
-	// Clear the meta importer from all importers
-	vtk->_importer->Clear();
 	// Clear the window of all actors
-	//this->Window->Initialize();
+    vtkActorCollection* acc = vtk->_importer->GetImportedActors();
+    vtkCollectionSimpleIterator ait;
+    acc->InitTraversal(ait);
+    while (auto* actor = acc->GetNextActor(ait))
+        vtk->_renderer->RemoveActor(actor);
+    // Clear the meta importer from all importers
+    vtk->_importer->Clear();
+    _aiscene = nullptr;
 }
 
-void VtkItem::sceneLoad(VtkItem::Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers)
+bool VtkItem::sceneLoad(VtkItem::Data* vtk, const std::vector<vtkSmartPointer<vtkImporter>>& importers)
 {
 	for (const vtkSmartPointer<vtkImporter>& importer : importers)
 		vtk->_importer->AddImporter(importer);
 
-	//// this->Window.InitializeUpVector();
+    int up = _manager->_settings->upDirection();
+    int right = _manager->_settings->rightDirection();
+    f3d::direction_t up_direction = _manager->_settings->getDirectionFromIdx(up);
+    f3d::direction_t right_direction = _manager->_settings->getDirectionFromIdx(right);
+    InitializeUpVector(vtk, up_direction, right_direction);
 
 	// Update the meta importer, the will only update importers that have not been updated before
 	if (!vtk->_importer->Update()) {
 		vtk->_importer->Clear();
 		///this->Window->Initialize();
+        qDebug() << "Importer Update error.";
+        return false;
 	}
 	// Initialize the animation using temporal information from the importer
 	_manager->resetAnim();
+    return true;
 }
 
-/*
-window_impl::window_impl(DS::Settings* psettings, vtkRenderWindow* vtkwindow)
-    : settings(psettings), RenWin(vtkwindow)
-{
-    this->RenWin->EnableTranslucentSurfaceOn();
-    this->RenWin->SetMultiSamples(0); // Disable hardware antialiasing
-    this->RenWin->SetOffScreenRendering(true);
-    this->RenWin->AddRenderer(this->Renderer);
-
-    this->Camera = std::make_unique<detail::camera_impl>();
-    this->Camera->SetVTKRenderer(this->Renderer);
-
-    Renderer->AddActor(this->GridActor);
-
-    qDebug() << "VTK window class type is " << this->RenWin->GetClassName();
-}
-*/
-/*
-void window_impl::InitializeUpVector()
-{
-    //this->Renderer->InitializeUpVector(this->Options.scene.up_direction);
-}
-
-window_impl::~window_impl()
-{
-    // The axis widget should be disabled before calling the renderer destructor
-    // As there is a register loop if not
-    // ??? this->GridActor->SetVisibility(false);
-}
-*/
 void VtkItem::UpdateDynamicOptions(VtkItem::Data* vtk)
 {
+    vtk->_camera->resetToBounds();
+    //vtk->_renderer->GetActiveCamera()->SetClippingRange(0.001, 1000000.0);
     ShowAxes(vtk, _manager->_settings->showAxes(), true);
     ShowGrid(vtk, _manager->_settings->showGrid(), true);
 }
@@ -483,6 +479,64 @@ vtkBoundingBox VtkItem::ComputeVisiblePropOrientedBounds(VtkItem::Data* vtk, con
     }
 
     return box;
+}
+
+void VtkItem::InitializeUpVector(VtkItem::Data* vtk, const std::vector<double>& upVec, const std::vector<double>& rightVec)
+{
+    assert(upVec.size() == 3);
+    assert(rightVec.size() == 3);
+    const auto isNullVector = [](const std::array<double, 3>& v)
+        {
+            constexpr double e = 1e-8;
+            return ::abs(v[0]) < e && ::abs(v[1]) < e && ::abs(v[2]) < e;
+        };
+
+    std::array<double, 3> up = { upVec[0], upVec[1], upVec[2] };
+    std::array<double, 3> right = { rightVec[0], rightVec[1], rightVec[2] };
+
+    /* if `up` is `(0,0,0)` make it `(0,1,0)` */
+    if (isNullVector(up) || isNullVector(right))
+    {
+        qDebug() << "Up or Right is null.";
+        return;
+    }
+    vtkMath::Normalize(up.data());
+    /* make sure `right` is not colinear with `up` */
+    if (::abs(vtkMath::Dot(right, up)) > 0.999)
+    {
+        qDebug() << "Up and Right are collinear.";
+        return;
+    }
+
+    /* make `front` orthogonal */
+    std::array<double, 3> front;
+    vtkMath::Cross(right.data(), up.data(), front.data());
+    vtkMath::Normalize(front.data());
+
+    /* ensure `right` is orthogonal */
+    vtkMath::Cross(up.data(), front.data(), right.data());
+    vtkMath::Normalize(right.data());
+
+    double upvector[3] = { up[0], up[1], up[2] };
+    double rightvector[3] = { right[0], right[1], right[2] };
+
+    double pos[3];
+    vtkMath::Cross(upvector, rightvector, pos);
+    vtkMath::MultiplyScalar(pos, -1.0);
+
+    vtkCamera* cam = vtk->_renderer->GetActiveCamera();
+    cam->SetFocalPoint(0.0, 0.0, 0.0);
+    cam->SetPosition(pos);
+    cam->SetViewUp(upvector);
+    
+    // skybox orientation
+    /*
+    this->SkyboxActor->SetFloorPlane(this->UpVector[0], this->UpVector[1], this->UpVector[2], 0.0);
+    this->SkyboxActor->SetFloorRight(front[0], front[1], front[2]);
+    */
+    // environment orientation
+    vtk->_renderer->SetEnvironmentUp(upvector);
+    vtk->_renderer->SetEnvironmentRight(rightvector);
 }
 
 }

@@ -4,7 +4,6 @@ import QtQuick.Controls.impl
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import Qt.labs.platform as Platform
-import QtQuick.Controls.Material
 
 import Dollstudio 1.0
 import  "."
@@ -15,8 +14,6 @@ ApplicationWindow {
     height: 600
     visible: true
     title: qsTr("Hello World")
-    Material.theme: Material.Dark
-    Material.accent: Material.Teal
 
     required property Manager projectManager
     required property Settings settings
@@ -151,6 +148,10 @@ ApplicationWindow {
                 text: qsTr("&About")
                 onTriggered: aboutDialog.open()
             }
+            Action {
+                text: qsTr("&Settings")
+                onTriggered: optionsDialog.open()
+            }
         }
     }
 
@@ -158,46 +159,78 @@ ApplicationWindow {
         RowLayout {
             anchors.fill: parent
             ToolButton {
-                 icon.source: "qrc:/icons/open.png" 
+                 icon.source: "qrc:/icons/open2.png"
+                 icon.height: 32
+                 icon.width: 32
                  onClicked: openProjectDialog.open()
-                 Layout.preferredWidth: 30
             }
             ToolButton {
-                 icon.source: "qrc:/icons/play_circle.png" 
+                 icon.source: "qrc:/icons/play1.png"
                  onClicked: projectManager.playToggle()
-                 Layout.preferredWidth: 30
+                 icon.height: 32
+                 icon.width: 32
             }
             Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
             ToolButton {
-                 icon.source: "qrc:/icons/view_all.png" 
+                 icon.source: "qrc:/icons/view_all2.png"
                  onClicked: projectManager.cameraReset()
-                 Layout.preferredWidth: 30
+                 icon.height: 32
+                 icon.width: 32
+            }
+            ToolButton {
+                 icon.source: "qrc:/icons/y_up_x_right.png"
+                 onClicked: {
+                     settings.upDirection = 1;
+                     settings.rightDirection = 0;
+                     projectManager.setDirection();
+                 }
+                 icon.height: 32
+                 icon.width: 32
+            }
+            ToolButton {
+                 icon.source: "qrc:/icons/z_up_y_left.png"
+                 onClicked: {
+                     settings.upDirection = 2;
+                     settings.rightDirection = 4;
+                     projectManager.setDirection();
+                 }
+                 icon.height: 32
+                 icon.width: 32
+            }
+            ToolButton {
+                 icon.source: "qrc:/icons/grid1.png"
+                 onClicked: projectManager.toggleShowGrid()
+                 icon.height: 32
+                 icon.width: 32
             }
             Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
             ToolButton {
-                 icon.source: "qrc:/icons/settings.png" 
+                 icon.source: "qrc:/icons/settings2.png" 
                  onClicked: optionsDialog.open()
-                 Layout.preferredWidth: 30
+                 icon.height: 32
+                 icon.width: 32
             }
             ToolButton {
-                 icon.source: "qrc:/icons/cancel.png" 
+                 icon.source: "qrc:/icons/cancel1.png"
                  onClicked: projectManager.closeSource()
-                 Layout.preferredWidth: 30
+                 icon.height: 32
+                 icon.width: 32
             }
             ToolButton {
-                 icon.source: "qrc:/icons/exit.png" 
+                 icon.source: "qrc:/icons/exit1.png"
                  onClicked: Qt.quit()
-                 Layout.preferredWidth: 30
+                 icon.height: 32
+                 icon.width: 32
             }
         }
         background: Rectangle {
-            color: "#424242"
+            color: "#eeeaed"
         }
     }
 
@@ -206,7 +239,7 @@ ApplicationWindow {
         objectName: "openProjectDialog"        
         nameFilters: ["FBX files (*.fbx)","All files (*)"]
         onAccepted: {
-            if (!projectManager.openSource(file)) openFileErrorDlg.open 
+            projectManager.openSource(file);
         }
     } 
 
@@ -218,7 +251,7 @@ ApplicationWindow {
     MessageDialog { 
         id: openFileErrorDlg
         buttons: MessageDialog.Ok 
-        text: "Unable to open the file!" 
+        text: "Unable to open the file." 
     }
     OptionsDialog {
         id: optionsDialog
