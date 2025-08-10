@@ -85,11 +85,13 @@ target_link_libraries(${MYNAME}
     Qt6::QuickPrivate
     ${VTK_LIBRARIES}
     assimp::assimp
-    assimp::zlibstatic
+    #assimp::zlibstatic
     #Qt6::qtquickdialogs2quickimplplugin
     #Qt6::qtquickdialogsplugin
-    C:/Qt/6.9.1/msvc2022_64/lib/Qt6QuickDialogs2d.lib
-    C:/Qt/6.9.1/msvc2022_64/lib/Qt6QuickDialogs2QuickImpld.lib
+    #C:/Qt/6.9.1/msvc2022_64/lib/Qt6QuickDialogs2d.lib
+    C:/vcpkg/installed/x64-windows/lib/Qt6QuickDialogs2.lib
+    #C:/Qt/6.9.1/msvc2022_64/lib/Qt6QuickDialogs2QuickImpld.lib
+    C:/vcpkg/installed/x64-windows/lib/Qt6QuickDialogs2QuickImpl.lib
     Dwmapi.lib
 )
 else()
@@ -113,18 +115,19 @@ target_include_directories(${MYNAME} PUBLIC
 target_include_directories(${MYNAME} PUBLIC ${ASSIMP_ROOT_DIR}/include)
 
 if (WIN32)
-set(QTINCL C:/Qt/6.9.1/msvc2022_64/include)
+#set(QTINCL C:/Qt/6.9.1/msvc2022_64/include)
+set(QTINCL  C:/vcpkg/installed/x64-windows/include)
 else()
 set(QTINCL /home/user/Qt/6.9.1/gcc_64/include)
 endif()
 
 target_include_directories(${MYNAME} PUBLIC
-    ${QTINCL}/QtQuickDialogs2Utils/6.9.1
-    ${QTINCL}/QtQuickDialogs2/6.9.1
-    ${QTINCL}/QtQuickDialogs2Utils/6.9.1/QtQuickDialogs2Utils
-    ${QTINCL}/QtQuickDialogs2Utils/6.9.1/QtQuickDialogs2Utils/private
-    ${QTINCL}/QtQuickDialogs2/6.9.1/QtQuickDialogs2
-    ${QTINCL}/QtQuickDialogs2/6.9.1/QtQuickDialogs2/private
+    ${QTINCL}/QtQuickDialogs2Utils/6.8.3
+    ${QTINCL}/QtQuickDialogs2/6.8.3
+    ${QTINCL}/QtQuickDialogs2Utils/6.8.3/QtQuickDialogs2Utils
+    ${QTINCL}/QtQuickDialogs2Utils/6.8.3/QtQuickDialogs2Utils/private
+    ${QTINCL}/QtQuickDialogs2/6.8.3/QtQuickDialogs2
+    ${QTINCL}/QtQuickDialogs2/6.8.3/QtQuickDialogs2/private
 )
 
 vtk_module_autoinit(TARGETS ${MYNAME} MODULES ${VTK_LIBRARIES})

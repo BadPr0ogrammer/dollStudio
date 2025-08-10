@@ -51,7 +51,8 @@ public:
 	void setTreeModel(vtkF3DAssimpImporter* importer);
 	void traversTree(QStandardItem* parent, const aiNode* node);
 
-    Q_INVOKABLE void openSource(const QUrl& url);
+	Q_INVOKABLE void openSource(const QString& fname);
+    Q_INVOKABLE void openSourceUrl(const QUrl& url);
 	Q_INVOKABLE void playToggle();
 	Q_INVOKABLE void treeSelChanged(const QModelIndex& idx);
 	Q_INVOKABLE void onMoved(double val);

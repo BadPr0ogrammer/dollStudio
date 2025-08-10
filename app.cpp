@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QQmlFileSelector>
 #include <QApplication>
+#include <QDir>
 
 #include "manager.h"
 #include "vtkitem.h"
@@ -19,8 +20,20 @@ App::App(int& argc, char** argv)
 	QApplication::setApplicationDisplayName("Dolls-Studio 3D");
 	QApplication::setApplicationVersion("0.1");
 	
+#ifdef _WIN32
+	QString wdir = QDir::currentPath();
+#else
+	QString wdir = getenv("QTDIR");
+#endif
+	QCoreApplication::addLibraryPath(wdir + "/plugins");
+
 	_application = new QGuiApplication(argc, argv);
 	_engine = new QQmlApplicationEngine();
+
+	_engine->addImportPath(wdir + "/qml");
+	_engine->addImportPath(wdir + "/plugins");
+	_engine->addPluginPath(wdir + "/plugins");
+
 	_settings = new Settings(_engine);
 	_manager = new Manager(_engine);
 	_manager->_settings = _settings;

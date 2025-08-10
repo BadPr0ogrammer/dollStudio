@@ -135,6 +135,10 @@ ApplicationWindow {
                         objectName: text + "MenuItem"
                         text: settings.displayableFilePath(modelData)
                         onTriggered: projectManager.openSource(modelData)
+                        contentItem: Text {
+                            text: modelData
+                            color: "blue"
+                        }
                     }
 
                     onObjectAdded: (index, object) => recentFilesSubMenu.insertItem(index, object)
@@ -294,7 +298,7 @@ ApplicationWindow {
         objectName: "openProjectDialog"        
         nameFilters: ["FBX files (*.fbx)","All files (*)"]
         onAccepted: {
-            projectManager.openSource(file);
+            projectManager.openSourceUrl(file);
         }
     } 
 

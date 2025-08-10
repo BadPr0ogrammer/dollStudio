@@ -25,13 +25,18 @@ void Manager::setConnect()
 	_timer.start();
 }
 
-void Manager::openSource(const QUrl& url)
+void Manager::openSource(const QString& fname)
 {
-	QString fname = url.toLocalFile();
 	if (_vtk->openSource(fname) != 0) {
 		qDebug() << "adding" << fname << "to recent files list";
 		_settings->addRecentFile(fname);
 	}
+}
+
+void Manager::openSourceUrl(const QUrl& url)
+{
+	QString fname = url.toLocalFile();
+	openSource(fname);
 }
 
 void Manager::playToggle()
