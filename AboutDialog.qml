@@ -30,6 +30,9 @@ Dialog {
             Layout.leftMargin: 40
         }
         Label {
+            text: qsTr("BadPr0ogrammer@gmail.com")
+        }
+        Label {
             text: qsTr("Copyright 2025, Andrei Barkhatov")
         }
     }

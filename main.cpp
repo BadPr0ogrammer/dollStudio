@@ -11,7 +11,6 @@ int main(int argc, char* argv[])
 	DS::App app(argc, argv);
 	if (app._engine->rootObjects().isEmpty())
 		return 1;
-
-	app.setup();
+	app.setConnect();
 	return app._application->exec();
 }

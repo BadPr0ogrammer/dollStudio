@@ -69,7 +69,7 @@ public:
 	vtkUserData initializeVTK(vtkRenderWindow* renderWindow) override;
 	void destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData) override;
 
-    void openSource(const QUrl& url);
+    int openSource(QString fname);
 	void close();
 	void play();
 	void setTreeView(Data* vtk);

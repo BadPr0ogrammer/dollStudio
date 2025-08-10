@@ -77,6 +77,15 @@ VtkItem::vtkUserData VtkItem::initializeVTK(vtkRenderWindow* renderWindow)
 	vtk->_vtkItem->UpdateDynamicOptions(vtk);
     
     qDebug() << "VTK window class type is " << renderWindow->GetClassName();
+    if (!_manager->_completed) {
+        _manager->_completed = true;
+        auto s = _manager->_settings;
+        if (s->loadOnStartup() && s->recentFiles().size() > 0) {
+            QString fname = s->recentFiles()[0].toLocal8Bit();
+            if (openSource(fname) == 0)
+                qDebug() << "Open " << fname << "error.";
+        }
+    }
 	return vtk;
 }
 
@@ -96,10 +105,10 @@ void VtkItem::destroyingVTK(vtkRenderWindow* renderWindow, vtkUserData userData)
     vtk->_renderer->Delete();
 }
 
-void VtkItem::openSource(const QUrl& url)
+int VtkItem::openSource(QString fname)
 {
-    _fname = url.toLocalFile();
-    _manager->_sourceRet = -1;
+    _fname = fname;
+    int ret = -1;
     dispatch_async([&](vtkRenderWindow* renderWindow, vtkUserData userData) {
 		Data* vtk = (Data*)userData.GetPointer();
 		auto mgr = vtk->_vtkItem->_manager;
@@ -115,12 +124,12 @@ void VtkItem::openSource(const QUrl& url)
                 int n;
                 vtk->_importer->GetTemporalInformation(0, 30, n, mgr->_timerg, nullptr);
                 
-                _manager->setSourceRet(1);
-                return;
+                ret = 1;
             }
 		}
-        _manager->setSourceRet(0);		
+        ret = 0;		
         });
+    return ret;
 }
 
 void VtkItem::setTreeView(Data* vtk)

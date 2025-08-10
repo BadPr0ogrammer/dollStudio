@@ -22,10 +22,9 @@ class Manager : public QObject
 	Q_OBJECT
     QML_ELEMENT
 	Q_PROPERTY(double sliderVal READ sliderVal WRITE setSliderVal NOTIFY sliderValChanged)
-	Q_PROPERTY(int sourceRet    READ sourceRet WRITE setSourceRet NOTIFY sourceRetChanged)
-
     Q_PROPERTY(QStandardItemModel* treeModel MEMBER _treemodel NOTIFY    treeModelChanged)
     Q_PROPERTY(QStringListModel*   listModel MEMBER _listmodel NOTIFY    listModelChanged)
+	Q_PROPERTY(QString playIcon MEMBER _playIcon NOTIFY playIconChanged)
 public:
 	Manager(QQmlEngine* engine);
 	
@@ -39,15 +38,14 @@ public:
 	bool _playing = false;
 	double _curtime = -1;
 	double _timerg[2] = {0,0};
+	bool _completed = false;
+	QString _playIcon = QString("qrc:/icons/play1.png");
+	
 	void resetAnim();
 
 	double _sliderval = 0.0;
 	double sliderVal() const { return _sliderval; }
 	void setSliderVal(double val);
-
-	int _sourceRet = -1;
-	int sourceRet() const { return _sourceRet; }
-	void setSourceRet(int val) { _sourceRet = val; emit sourceRetChanged(); }
 
 	void setConnect();
 	void setTreeModel(vtkF3DAssimpImporter* importer);
@@ -66,7 +64,7 @@ signals:
 	void sliderValChanged();
     void treeModelChanged();
     void listModelChanged();
-	void sourceRetChanged();
+	void playIconChanged();
 public slots:
 	void timerSlot();
 };

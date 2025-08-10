@@ -36,6 +36,7 @@ ColumnLayout {
 
     ScrollView {
         clip: true
+        leftPadding: 30
 
         ScrollBar.horizontal.policy: ScrollBar.AsNeeded
 

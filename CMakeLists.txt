@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.26)
 
 set(MYNAME dollstudio)
 
@@ -18,6 +18,8 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
 find_package(VTK REQUIRED)
 find_package(assimp REQUIRED)
+
+qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(${MYNAME}
     MANUAL_FINALIZATION
@@ -73,6 +75,7 @@ qt_add_qml_module(${MYNAME}
 	AboutDialog.qml
 	OptionsDialog.qml
 	AppearanceTab.qml
+	BehaviourTab.qml
 )
 
 if (WIN32)

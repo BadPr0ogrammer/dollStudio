@@ -14,7 +14,7 @@ namespace DS
 {
 App::App(int& argc, char** argv)
 {
-	QApplication::setOrganizationName("Andrei Barkhatov");
+	QApplication::setOrganizationName("BadPr0ogrammer");
 	QApplication::setApplicationName("dollstudio");
 	QApplication::setApplicationDisplayName("Dolls-Studio 3D");
 	QApplication::setApplicationVersion("0.1");
@@ -37,6 +37,7 @@ App::App(int& argc, char** argv)
         { "projectManager", QVariant::fromValue(_manager) },
 		{ "settings", QVariant::fromValue(_settings) },
 		});
+
 	_engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
 	if (_engine->rootObjects().isEmpty()) {
 		qDebug() << "... failed to load main.qml";
@@ -63,7 +64,7 @@ App::App(int& argc, char** argv)
 	}
 }
 
-void App::setup()
+void App::setConnect()
 {
 	_manager->setConnect();
 }

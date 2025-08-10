@@ -13,7 +13,7 @@ ApplicationWindow {
     width: 800
     height: 600
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Dolls-Studio 3D")
 
     required property Manager projectManager
     required property Settings settings
@@ -114,7 +114,44 @@ ApplicationWindow {
                 text: qsTr("&Open...")
                 onTriggered: openProjectDialog.open()
             }
-            MenuSeparator { }
+            MenuSeparator { }            
+            Menu {
+                id: recentFilesSubMenu
+                objectName: "recentFilesSubMenu"
+                title: qsTr("Recent Files")
+                // This can use LayoutGroup if it's ever implemented: https://bugreports.qt.io/browse/QTBUG-44078
+                width: 400
+                enabled: recentFilesInstantiator.count > 0
+
+                //onClosed: canvas.forceActiveFocus()
+
+                Instantiator {
+                    id: recentFilesInstantiator
+                    objectName: "recentFilesInstantiator"
+                    model: settings.recentFiles
+                    delegate: MenuItem {
+                        // We should elide on the right when it's possible without losing the styling:
+                        // https://bugreports.qt.io/browse/QTBUG-70961
+                        objectName: text + "MenuItem"
+                        text: settings.displayableFilePath(modelData)
+                        onTriggered: projectManager.openSource(modelData)
+                    }
+
+                    onObjectAdded: (index, object) => recentFilesSubMenu.insertItem(index, object)
+                    onObjectRemoved: (index, object) => recentFilesSubMenu.removeItem(object)
+                }
+
+                MenuSeparator {}
+
+                MenuItem {
+                    objectName: "clearRecentFilesMenuItem"
+                    //: Empty the list of recent files in the File menu.
+                    text: qsTr("Clear Recent Files")
+                    onTriggered: settings.clearRecentFiles()
+                }
+            }
+
+            MenuSeparator {}
             Action {
                 text: qsTr("&Quit")
                 onTriggered: Qt.quit()
@@ -148,6 +185,7 @@ ApplicationWindow {
                 text: qsTr("&About")
                 onTriggered: aboutDialog.open()
             }
+            MenuSeparator {}
             Action {
                 text: qsTr("&Settings")
                 onTriggered: optionsDialog.open()
@@ -165,7 +203,7 @@ ApplicationWindow {
                  onClicked: openProjectDialog.open()
             }
             ToolButton {
-                 icon.source: "qrc:/icons/play1.png"
+                 icon.source: projectManager.playIcon
                  onClicked: projectManager.playToggle()
                  icon.height: 32
                  icon.width: 32
@@ -175,7 +213,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
             ToolButton {
-                 icon.source: "qrc:/icons/view_all2.png"
+                 icon.source: "qrc:/icons/view_all1.png"
                  onClicked: projectManager.cameraReset()
                  icon.height: 32
                  icon.width: 32
@@ -195,6 +233,16 @@ ApplicationWindow {
                  onClicked: {
                      settings.upDirection = 2;
                      settings.rightDirection = 4;
+                     projectManager.setDirection();
+                 }
+                 icon.height: 32
+                 icon.width: 32
+            }
+            ToolButton {
+                 icon.source: "qrc:/icons/z_up_x_left.png"
+                 onClicked: {
+                     settings.upDirection = 2;
+                     settings.rightDirection = 3;
                      projectManager.setDirection();
                  }
                  icon.height: 32
@@ -223,6 +271,12 @@ ApplicationWindow {
                  icon.width: 32
             }
             ToolButton {
+                 icon.source: "qrc:/icons/info.png"
+                 onClicked: aboutDialog.open()
+                 icon.height: 32
+                 icon.width: 32
+            }
+            ToolButton {
                  icon.source: "qrc:/icons/exit1.png"
                  onClicked: Qt.quit()
                  icon.height: 32
@@ -231,6 +285,7 @@ ApplicationWindow {
         }
         background: Rectangle {
             color: "#eeeaed"
+            border.color: "#353637"
         }
     }
 

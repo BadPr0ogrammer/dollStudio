@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import Dollstudio 1.0
-import "."
+import  "."
 
 Dialog {
     id: dialog
@@ -12,10 +12,10 @@ Dialog {
     modal: true
     focus: true
     implicitWidth: 500
-    implicitHeight: 400    
+    implicitHeight: 400
 
     standardButtons: Dialog.Ok | Dialog.Cancel
-    
+
     onAccepted: applyChangesToSettings()
     // We used to use onRejected here, but if the settings changes outside of our control
     // (e.g. through being reset during testing) then some controls will contain outdated
@@ -24,14 +24,14 @@ Dialog {
 
     function applyChangesToSettings() {
         appearanceTab.applyChangesToSettings()
-        //behaviourTab.applyChangesToSettings()
+        behaviourTab.applyChangesToSettings()
     }
 
     function revertToOldSettings() {
         appearanceTab.revertToOldSettings()
-        //behaviourTab.revertToOldSettings()
+        behaviourTab.revertToOldSettings()
     }
-    
+
     header: TabBar {
         id: tabBar
         // For the Universal style.
@@ -41,14 +41,23 @@ Dialog {
             objectName: "appearanceTabButton"
             text: qsTr("Appearance")
         }
+
+        TabButton {
+            objectName: "behaviourTabButton"
+            text: qsTr("Behaviour")
+        }
     }
 
     StackLayout {
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
-        
+
         AppearanceTab {
             id: appearanceTab
+        }
+
+        BehaviourTab {
+            id: behaviourTab
         }
     }
 }

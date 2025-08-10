@@ -14,7 +14,7 @@ class App
 public:
 	App(int& argc, char** argv);
 	~App();
-	void setup();
+	void setConnect();
 
 	QGuiApplication*		_application = nullptr;
 	QQmlApplicationEngine*	_engine = nullptr;
